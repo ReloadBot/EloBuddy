@@ -47,22 +47,14 @@ namespace MasterYi
             E = new Spell.Active(SpellSlot.E, 0);
             R = new Spell.Active(SpellSlot.R, 0);
 
-            var  menu = MainMenu.AddMenu("HariGaren", "harigaren");
+            var menu = MainMenu.AddMenu("Master Yi", "HoYi");
 
-            ComboMenu = menu.AddSubMenu("Combo", "comboMenu");
-            Drawnigs = menu.AddSubMenu("Drawnigs", "drawnigs");
+            menu.AddGroupLabel("Combo");
 
-            ComboMenu.AddGroupLabel("CONFIGURAR COMBO:");
-            ComboMenu.Add("qCombo", new CheckBox("Usar (Q) no combo"));
-            ComboMenu.Add("wCombo", new CheckBox("Usar (W) no combo"));
-            ComboMenu.Add("eCombo", new CheckBox("Usar (E) no combo"));
-            ComboMenu.Add("rCombo", new CheckBox("Usar (R) no combo"));
 
-            Drawnigs.AddGroupLabel("Drawnings ON/OFF");
-            Drawnigs.Add("wDraw", new CheckBox("Draw (W)"));
-            Drawnigs.Add("eDraw", new CheckBox("Draw (E)"));
-            Drawnigs.Add("rDraw", new CheckBox("Draw (R)"));
-
+            menu.AddSeparator();
+            menu.AddGroupLabel("Drawings");
+            var qRange = menu.Add("qDraw", new CheckBox("Q range"));
 
 
             Game.OnTick += Game_OnTick;
