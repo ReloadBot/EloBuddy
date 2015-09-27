@@ -47,19 +47,21 @@ namespace MasterYi
             E = new Spell.Active(SpellSlot.E, 0);
             R = new Spell.Active(SpellSlot.R, 0);
 
-            menu = MainMenu.AddMenu("HoYaYa Yi", "gahyi");
+            menu = MainMenu.AddMenu("HariGaren", "harigaren");
             ComboMenu = menu.AddSubMenu("Combo", "comboMenu");
             Drawnigs = menu.AddSubMenu("Drawnigs", "drawnigs");
 
-            ComboMenu.AddGroupLabel("Combo Config:");
-            ComboMenu.Add("qCombo", new CheckBox("(Q) in Combo"));
-            ComboMenu.Add("eCombo", new CheckBox("(E) in Combo"));
-            ComboMenu.Add("rCombo", new CheckBox("(R) in combo"));
+            ComboMenu.AddGroupLabel("CONFIGURAR COMBO:");
+            ComboMenu.Add("qCombo", new CheckBox("Usar (Q) no combo"));
+            ComboMenu.Add("wCombo", new CheckBox("Usar (W) no combo"));
+            ComboMenu.Add("eCombo", new CheckBox("Usar (E) no combo"));
+            ComboMenu.Add("rCombo", new CheckBox("Usar (R) no combo"));
 
             Drawnigs.AddGroupLabel("Drawnings ON/OFF");
-            Drawnigs.Add("qDraw", new CheckBox("Draw (Q)"));
+            Drawnigs.Add("wDraw", new CheckBox("Draw (W)"));
+            Drawnigs.Add("eDraw", new CheckBox("Draw (E)"));
+            Drawnigs.Add("rDraw", new CheckBox("Draw (R)"));
 
-            ComboMenu.AddGroupLabel("(W) Settings:");
 
 
             Game.OnTick += Game_OnTick;
@@ -78,6 +80,9 @@ namespace MasterYi
         {
 
             var target = TargetSelector.GetTarget(600, DamageType.Mixed);
+
+
+
 
 
 
