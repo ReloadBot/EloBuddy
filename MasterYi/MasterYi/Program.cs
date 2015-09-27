@@ -20,7 +20,7 @@ namespace MasterYi
     {
 
 
-        public static Menu Drawnigs, ComboMenu, KSMenu, menu;
+        public static Menu Drawnigs, ComboMenu, menu;
         public static Spell.Active Q;
         public static Spell.Active W;
         public static Spell.Active E;
@@ -47,9 +47,8 @@ namespace MasterYi
             E = new Spell.Active(SpellSlot.E, 0);
             R = new Spell.Active(SpellSlot.R, 0);
 
-            menu = MainMenu.AddMenu("HoYaYa Yi", "gahYi");
+            menu = MainMenu.AddMenu("HoYaYa Yi", "gahyi");
             ComboMenu = menu.AddSubMenu("Combo", "comboMenu");
-            KSMenu = menu.AddSubMenu("KillSteal", "KSMenu");
             Drawnigs = menu.AddSubMenu("Drawnigs", "drawnigs");
 
             ComboMenu.AddGroupLabel("Combo Config:");
@@ -61,6 +60,7 @@ namespace MasterYi
             Drawnigs.Add("qDraw", new CheckBox("Draw (Q)"));
 
             ComboMenu.AddGroupLabel("(W) Settings:");
+
 
             Game.OnTick += Game_OnTick;
             Drawing.OnDraw += Drawing_OnDraw;
