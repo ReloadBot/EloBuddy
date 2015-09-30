@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing.Text;
 using System.Linq;
 using EloBuddy;
 using EloBuddy.SDK;
@@ -26,6 +27,7 @@ namespace xRP___Varus
             FarmMenu,
             DrawMenu,
             HarasMenu,
+            ItemMenu,
             ComboMenu;
 
         public static Spell.Skillshot Q;
@@ -63,8 +65,14 @@ namespace xRP___Varus
             ComboMenu.Add("comboe", new CheckBox("Use (E) in Combo", true));
             ComboMenu.Add("combor", new Slider  ("Min Enemy to (R)", 3, 0, 5 ));
 
+            ItemMenu = Menu.AddSubMenu("Draw Menu", "xDraw");
+            ItemMenu.Add("usemana", new CheckBox("Use ManaMune in Combo", true));
+            ItemMenu.Add("useer", new CheckBox("Use  BOTRK in Combo", true));
+
+
+
             FarmMenu = Menu.AddSubMenu("Lane Menu", "xlane");
-            FarmMenu.Add("farmw", new Slider("Use (W) Farm Min Minions", 1,0,30));
+            FarmMenu.Add("farme", new Slider("Use (W) Farm Min Minions", 1,0,30));
             FarmMenu.Add("farmq", new CheckBox("Use (Q) to Farm", true));
 
             HarasMenu = Menu.AddSubMenu("Haras Menu", "xharas");
@@ -94,10 +102,11 @@ namespace xRP___Varus
         public static void Game_OnUpdate(EventArgs args)
         {
            
-            var enemy = TargetSelector.GetTarget(1000, DamageType.Physical);
+            var enemy = TargetSelector.GetTarget(860, DamageType.Physical);
+            
             if (!enemy.IsValid()) return;
 
-            if (Q.IsReady() && Q.IsInRange(enemy) && ComboMenu["comboq"].Cast<CheckBox>().CurrentValue)
+            if (Q.IsReady() && Q.IsInRange(enemy) && FarmMenu["comboq"].Cast<CheckBox>().CurrentValue)
             {
                 Q.Cast(enemy);
             }
@@ -117,7 +126,23 @@ namespace xRP___Varus
                 {
                     R.Cast(enemy);
                 }
-           
+
+
+            // Items Usage
+
+            Item manamune = new Item((int)ItemId.Manamune, 550);
+            Item botrk = new Item((int)ItemId.Blade_of_the_Ruined_King, 550);
+
+            if (ItemMenu["usemura"].Cast<CheckBox>().CurrentValue && manamune.IsReady() )
+            {
+                manamune.Cast(enemy);
+            }
+
+            if (ItemMenu["useer"].Cast<CheckBox>().CurrentValue && manamune.IsReady())
+            {
+                botrk.Cast(enemy);
+            }
+
         }
 
         private static void LaneClear()
@@ -126,10 +151,10 @@ namespace xRP___Varus
 
             if (minion == null)
                 return;
-            if (W.IsReady() && W.IsInRange(minion))
-                if (minion.CountEnemiesInRange(_Player.GetAutoAttackRange()) >= ComboMenu["farmw"].Cast<Slider>().CurrentValue)
+            if (E.IsReady() && E.IsInRange(minion))
+                if (minion.CountEnemiesInRange(_Player.GetAutoAttackRange()) >= ComboMenu["farme"].Cast<Slider>().CurrentValue)
                 {
-                    W.Cast(minion);
+                    E.Cast(minion);
                 }
 
             if (Q.IsReady() && Q.IsInRange(minion) && FarmMenu["farmq"].Cast<CheckBox>().CurrentValue)
@@ -189,6 +214,9 @@ namespace xRP___Varus
                 }.Draw(ObjectManager.Player.Position);
             }
         }
+
+        
+
 
 
     }
