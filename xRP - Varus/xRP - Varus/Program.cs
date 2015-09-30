@@ -80,14 +80,14 @@ namespace xRP___Varus
 
         public static void Game_OnUpdate(EventArgs args)
         {
-            var enemy = TargetSelector.GetTarget(590, DamageType.Physical);
-            if (!enemy.IsValid()) return;
+           
         }
 
 
         private static void Combo()
         {
-            var enemy = TargetSelector.GetTarget(590, DamageType.Physical);
+
+var enemy = TargetSelector.GetTarget(1000, DamageType.Physical);
 
             if (Q.IsReady() && Q.IsInRange(enemy) && ComboMenu["comboq"].Cast<CheckBox>().CurrentValue)
             {
