@@ -133,12 +133,12 @@ namespace xRP___Varus
             Item manamune = new Item((int)ItemId.Manamune, 550);
             Item botrk = new Item((int)ItemId.Blade_of_the_Ruined_King, 550);
 
-            if (ItemMenu["usemura"].Cast<CheckBox>().CurrentValue && manamune.IsReady() )
+            if (ItemMenu["usemura"].Cast<CheckBox>().CurrentValue && manamune.IsReady() && enemy.IsValidTarget(manamune.Range))
             {
                 manamune.Cast(enemy);
             }
 
-            if (ItemMenu["useer"].Cast<CheckBox>().CurrentValue && manamune.IsReady())
+            if (ItemMenu["useer"].Cast<CheckBox>().CurrentValue && botrk.IsReady() && enemy.IsValidTarget(botrk.Range) && _Player.Health + _Player.GetItemDamage(enemy, (ItemId)botrk.Id) < _Player.MaxHealth)
             {
                 botrk.Cast(enemy);
             }
