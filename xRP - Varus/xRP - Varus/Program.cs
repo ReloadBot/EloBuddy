@@ -1,27 +1,23 @@
 ﻿using System;
-using System.Drawing.Text;
 using System.Linq;
 using EloBuddy;
 using EloBuddy.SDK;
-using EloBuddy.SDK.Enumerations;
 using EloBuddy.SDK.Events;
 using EloBuddy.SDK.Menu;
 using EloBuddy.SDK.Menu.Values;
 using EloBuddy.SDK.Rendering;
+using xRP_Spells;
 using Color = System.Drawing.Color;
 
 namespace xRP___Varus
 {
     class Program
     {
-
         public static AIHeroClient _Player
         {
             get { return ObjectManager.Player; }
+
         }
-
-
-        public const string ChampName = "Varus";
 
         public static Menu Menu,
             FarmMenu,
@@ -30,31 +26,22 @@ namespace xRP___Varus
             ItemMenu,
             ComboMenu;
 
-        public static Spell.Skillshot Q;
-        public static Spell.Active W;
-        public static Spell.Skillshot E;
-        public static Spell.Skillshot R;
+        public const string ChampName = "Varus";
 
         static void Main(string[] args)
         {
+            if (Player.Instance.ChampionName != ChampName)
+                return;
+
             Loading.OnLoadingComplete += Game_OnStart;
-            Game.OnUpdate += Game_OnUpdate;
             Game.OnTick += Game_OnTick;
             Drawing.OnDraw += OnDraw;
         }
 
         private static void Game_OnStart(EventArgs args)
         {
-            if (Player.Instance.ChampionName != ChampName)
-                return;
-
 
             Chat.Print("xRP - Varus LOADED \n 1.0.0v \n HaveFun");
-
-            Q = new Spell.Chargeable(SpellSlot.Q, 850, 1475, 2);
-            W = new Spell.Active(SpellSlot.W);
-            E = new Spell.Skillshot(SpellSlot.E, 925, SkillShotType.Circular);
-            R = new Spell.Skillshot(SpellSlot.R, 1075, SkillShotType.Linear);
 
             Menu = MainMenu.AddMenu("xRP Varus", "xvarus");
             Menu.AddSeparator();
@@ -87,7 +74,11 @@ namespace xRP___Varus
 
         private static void Game_OnTick(EventArgs args)
         {
-       
+            if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo))
+            {
+                Combo();
+            }
+
             if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.LaneClear))
             {
                 LaneClear();
@@ -99,47 +90,47 @@ namespace xRP___Varus
             }
         }
 
-        public static void Game_OnUpdate(EventArgs args)
+        private static void Combo()
         {
 
             if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo))
 
-                {
+            {
 
-                var enemy = TargetSelector.GetTarget(860, DamageType.Physical);
-
+                var enemy = TargetSelector.GetTarget(1625, DamageType.Physical);
                 if (!enemy.IsValid()) return;
 
-                if (Q.IsReady() && Q.IsInRange(enemy) && FarmMenu["comboq"].Cast<CheckBox>().CurrentValue)
+
+                if (Varus.Q.IsReady() && Varus.Q.IsInRange(enemy) && FarmMenu["comboq"].Cast<CheckBox>().CurrentValue)
                 {
-                    Q.Cast(enemy);
+                    Varus.Q.Cast(enemy);
                 }
 
-                if (W.IsReady() && enemy.IsInAutoAttackRange(ObjectManager.Player) &&
+                if (Varus.W.IsReady() && enemy.IsInAutoAttackRange(ObjectManager.Player) &&
                     ComboMenu["combow"].Cast<CheckBox>().CurrentValue)
                 {
-                    W.Cast();
+                    Varus.W.Cast();
                 }
 
-                if (enemy.IsValid && E.IsReady() && E.IsInRange(enemy) &&
+                if (enemy.IsValid && Varus.E.IsReady() && Varus.E.IsInRange(enemy) &&
                     ComboMenu["comboe"].Cast<CheckBox>().CurrentValue)
                 {
-                    E.Cast(enemy);
+                    Varus.E.Cast(enemy);
                 }
 
-                if (R.IsReady() && R.IsInRange(enemy) && enemy.IsValid)
+                if (Varus.R.IsReady() && Varus.R.IsInRange(enemy) && enemy.IsValid)
                     if (_Player.CountEnemiesInRange(_Player.GetAutoAttackRange()) >=
                         ComboMenu["combor"].Cast<Slider>().CurrentValue)
                     {
-                        R.Cast(enemy);
+                        Varus.R.Cast(enemy);
                     }
 
 
 
                 // Items Usage
 
-                Item manamune = new Item((int) ItemId.Manamune, 550);
-                Item botrk = new Item((int) ItemId.Blade_of_the_Ruined_King, 550);
+                Item manamune = new Item((int)ItemId.Manamune, 550);
+                Item botrk = new Item((int)ItemId.Blade_of_the_Ruined_King, 550);
 
                 if (ItemMenu["usemura"].Cast<CheckBox>().CurrentValue && manamune.IsReady() &&
                     enemy.IsValidTarget(manamune.Range))
@@ -149,7 +140,7 @@ namespace xRP___Varus
 
                 if (ItemMenu["useer"].Cast<CheckBox>().CurrentValue && botrk.IsReady() &&
                     enemy.IsValidTarget(botrk.Range) &&
-                    _Player.Health + _Player.GetItemDamage(enemy, (ItemId) botrk.Id) < _Player.MaxHealth)
+                    _Player.Health + _Player.GetItemDamage(enemy, (ItemId)botrk.Id) < _Player.MaxHealth)
                 {
                     botrk.Cast(enemy);
                 }
@@ -164,27 +155,27 @@ namespace xRP___Varus
 
             if (minion == null)
                 return;
-            if (E.IsReady() && E.IsInRange(minion))
+            if (Varus.E.IsReady() && Varus.E.IsInRange(minion))
                 if (minion.CountEnemiesInRange(_Player.GetAutoAttackRange()) >= ComboMenu["farme"].Cast<Slider>().CurrentValue)
                 {
-                    E.Cast(minion);
+                    Varus.E.Cast(minion);
                 }
 
-            if (Q.IsReady() && Q.IsInRange(minion) && FarmMenu["farmq"].Cast<CheckBox>().CurrentValue)
+            if (Varus.Q.IsReady() && Varus.Q.IsInRange(minion) && FarmMenu["farmq"].Cast<CheckBox>().CurrentValue)
             {
-                Q.Cast(minion);
+                Varus.Q.Cast(minion);
             }
 
         }
 
         private static void Harass()
         {
-            var enemy = TargetSelector.GetTarget(1000, DamageType.Physical);
+            var enemy = TargetSelector.GetTarget(1625, DamageType.Physical);
 
-            if (enemy.IsValid && Q.IsReady() && Q.IsInRange(enemy) && HarasMenu["hq"].Cast<CheckBox>().CurrentValue)
+            if (enemy.IsValid && Varus.Q.IsReady() && Varus.Q.IsInRange(enemy) && HarasMenu["hq"].Cast<CheckBox>().CurrentValue)
             {
-                Q.Cast(enemy);
 
+                Varus.Q.Cast(enemy);
             }
 
         }
@@ -210,7 +201,7 @@ namespace xRP___Varus
                 new Circle()
                 {
                     Color = Color.LawnGreen,
-                    Radius = Q.Radius,
+                    Radius = Varus.Q.Radius,
                     BorderWidth = 2f
 
                 }.Draw(ObjectManager.Player.Position);
@@ -221,7 +212,7 @@ namespace xRP___Varus
                 new Circle()
                 {
                     Color = Color.MediumPurple,
-                    Radius = E.Radius,
+                    Radius = Varus.E.Radius,
                     BorderWidth = 2f
 
                 }.Draw(ObjectManager.Player.Position);
