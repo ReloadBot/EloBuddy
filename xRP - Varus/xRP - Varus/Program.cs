@@ -101,7 +101,7 @@ namespace xRP___Varus
                 if (!enemy.IsValid()) return;
 
 
-                if (Varus.Q.IsReady() && Varus.Q.IsInRange(enemy) && FarmMenu["comboq"].Cast<CheckBox>().CurrentValue)
+                if (Varus.Q.IsReady() && Varus.Q.IsInRange(enemy) && ComboMenu["comboq"].Cast<CheckBox>().CurrentValue)
                 {
                     Varus.Q.Cast(enemy);
                 }
