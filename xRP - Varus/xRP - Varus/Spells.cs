@@ -6,6 +6,7 @@ namespace xRP_Spells
 {
     public static class Varus
     {
+        public static AIHeroClient _Player { get { return ObjectManager.Player; } }
         public static Spell.Skillshot Q;
         public static Spell.Active W;
         public static Spell.Skillshot E;
