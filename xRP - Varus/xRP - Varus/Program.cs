@@ -101,49 +101,62 @@ namespace xRP___Varus
 
         public static void Game_OnUpdate(EventArgs args)
         {
-           
-            var enemy = TargetSelector.GetTarget(860, DamageType.Physical);
-            
-            if (!enemy.IsValid()) return;
 
-            if (Q.IsReady() && Q.IsInRange(enemy) && FarmMenu["comboq"].Cast<CheckBox>().CurrentValue)
-            {
-                Q.Cast(enemy);
-            }
+            if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo))
 
-            if (W.IsReady() && enemy.IsInAutoAttackRange(ObjectManager.Player) && ComboMenu["combow"].Cast<CheckBox>().CurrentValue)
-            {
-                W.Cast();
-            }
-
-            if (enemy.IsValid && E.IsReady() && E.IsInRange(enemy) && ComboMenu["comboe"].Cast<CheckBox>().CurrentValue)
-            {
-                E.Cast(enemy);
-            }
-
-            if (R.IsReady() && R.IsInRange(enemy) && enemy.IsValid)
-                if (_Player.CountEnemiesInRange(_Player.GetAutoAttackRange()) >= ComboMenu["combor"].Cast<Slider>().CurrentValue)
                 {
-                    R.Cast(enemy);
+
+                var enemy = TargetSelector.GetTarget(860, DamageType.Physical);
+
+                if (!enemy.IsValid()) return;
+
+                if (Q.IsReady() && Q.IsInRange(enemy) && FarmMenu["comboq"].Cast<CheckBox>().CurrentValue)
+                {
+                    Q.Cast(enemy);
                 }
 
+                if (W.IsReady() && enemy.IsInAutoAttackRange(ObjectManager.Player) &&
+                    ComboMenu["combow"].Cast<CheckBox>().CurrentValue)
+                {
+                    W.Cast();
+                }
 
-            // Items Usage
+                if (enemy.IsValid && E.IsReady() && E.IsInRange(enemy) &&
+                    ComboMenu["comboe"].Cast<CheckBox>().CurrentValue)
+                {
+                    E.Cast(enemy);
+                }
 
-            Item manamune = new Item((int)ItemId.Manamune, 550);
-            Item botrk = new Item((int)ItemId.Blade_of_the_Ruined_King, 550);
+                if (R.IsReady() && R.IsInRange(enemy) && enemy.IsValid)
+                    if (_Player.CountEnemiesInRange(_Player.GetAutoAttackRange()) >=
+                        ComboMenu["combor"].Cast<Slider>().CurrentValue)
+                    {
+                        R.Cast(enemy);
+                    }
 
-            if (ItemMenu["usemura"].Cast<CheckBox>().CurrentValue && manamune.IsReady() && enemy.IsValidTarget(manamune.Range))
-            {
-                manamune.Cast(enemy);
+
+
+                // Items Usage
+
+                Item manamune = new Item((int) ItemId.Manamune, 550);
+                Item botrk = new Item((int) ItemId.Blade_of_the_Ruined_King, 550);
+
+                if (ItemMenu["usemura"].Cast<CheckBox>().CurrentValue && manamune.IsReady() &&
+                    enemy.IsValidTarget(manamune.Range))
+                {
+                    manamune.Cast(enemy);
+                }
+
+                if (ItemMenu["useer"].Cast<CheckBox>().CurrentValue && botrk.IsReady() &&
+                    enemy.IsValidTarget(botrk.Range) &&
+                    _Player.Health + _Player.GetItemDamage(enemy, (ItemId) botrk.Id) < _Player.MaxHealth)
+                {
+                    botrk.Cast(enemy);
+                }
+
             }
-
-            if (ItemMenu["useer"].Cast<CheckBox>().CurrentValue && botrk.IsReady() && enemy.IsValidTarget(botrk.Range) && _Player.Health + _Player.GetItemDamage(enemy, (ItemId)botrk.Id) < _Player.MaxHealth)
-            {
-                botrk.Cast(enemy);
-            }
-
         }
+
 
         private static void LaneClear()
         {
