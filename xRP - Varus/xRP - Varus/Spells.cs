@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-using EloBuddy;
+﻿using EloBuddy;
 using EloBuddy.SDK;
 using EloBuddy.SDK.Enumerations;
-using SharpDX;
 
 namespace xRP_Spells
 {
@@ -13,10 +11,6 @@ namespace xRP_Spells
         public static Spell.Skillshot E;
         public static Spell.Skillshot R;
 
-        public static List<Spell.SpellBase> AllSpells { get; private set; }
-
-        public static Dictionary<SpellSlot, Color> ColorTranslation { get; private set; }
-
         static Varus()
         {
             Q = new Spell.Chargeable(SpellSlot.Q, 925, 1625, 4);
@@ -26,4 +20,7 @@ namespace xRP_Spells
         }
 
     }
+
+ 
+    
 }
