@@ -68,14 +68,14 @@ namespace xRP_Lux
             var user = config.ComboMenu["combor"].Cast<Slider>().CurrentValue;
 
             // Cast Q
-            if (useq && Lux.Q.IsReady())
+            if (Lux.Q.IsReady())
             {
                 var Target = TargetSelector.GetTarget(Lux.Q.Range, DamageType.Magical);
-                var Pred = Lux.Q.GetPrediction(Target);
+                
 
                 if (Target != null && Target.IsValid)
                 {
-                    Lux.Q.Cast(Pred.CastPosition);
+                    Lux.Q.Cast(Target.Position);
                 }
             }
 
