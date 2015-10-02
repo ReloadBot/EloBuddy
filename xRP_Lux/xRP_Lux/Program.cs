@@ -41,12 +41,7 @@ namespace xRP_Lux
             if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.LaneClear)) { LaneClear(); }
             if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Harass)) { Harass(); }
 
-        }
 
-
-        public static void Combo()
-        {
-            
             var useq = config.ComboMenu["comboq"].Cast<CheckBox>().CurrentValue;
             var usew = config.ComboMenu["combow"].Cast<CheckBox>().CurrentValue;
             var usee = config.ComboMenu["comboe"].Cast<CheckBox>().CurrentValue;
@@ -58,7 +53,7 @@ namespace xRP_Lux
             if (Lux.Q.IsReady())
             {
                 var Target = TargetSelector.GetTarget(Lux.Q.Range, DamageType.Magical);
-                
+
 
                 if (Target != null && Target.IsValid)
                 {
@@ -69,7 +64,7 @@ namespace xRP_Lux
             //Cast W
             if (usew && Lux.W.IsReady())
             {
-                
+
                 {
                     Lux.W.Cast();
                 }
@@ -83,7 +78,7 @@ namespace xRP_Lux
 
                 if (Target != null && Target.IsValid)
                 {
-                    
+
                     {
                         Lux.E.Cast(Pred.CastPosition);
                     }
@@ -106,7 +101,11 @@ namespace xRP_Lux
             }
 
 
+        }
 
+
+        public static void Combo()
+        {
                    
         }
 
