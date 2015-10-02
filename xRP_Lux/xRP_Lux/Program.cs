@@ -37,76 +37,79 @@ namespace xRP_Lux
 
         private static void Game_OnUpdate(EventArgs args)
         {
-            if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo)) { Combo(); }
+            
             if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.LaneClear)) { LaneClear(); }
             if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Harass)) { Harass(); }
-
-
-            var useq = config.ComboMenu["comboq"].Cast<CheckBox>().CurrentValue;
-            var usew = config.ComboMenu["combow"].Cast<CheckBox>().CurrentValue;
-            var usee = config.ComboMenu["comboe"].Cast<CheckBox>().CurrentValue;
-            var user = config.ComboMenu["combor"].Cast<Slider>().CurrentValue;
-
-            // Cast Q
-
-
-            if (Lux.Q.IsReady())
-            {
-                var Target = TargetSelector.GetTarget(Lux.Q.Range, DamageType.Magical);
-
-
-                if (Target != null && Target.IsValid)
-                {
-                    Lux.Q.Cast(Target.Position);
-                }
-            }
-
-            //Cast W
-            if (usew && Lux.W.IsReady())
-            {
-
-                {
-                    Lux.W.Cast();
-                }
-            }
-
-            //Cast E
-            if (usee && Lux.E.IsReady())
-            {
-                var Target = TargetSelector.GetTarget(Lux.W.Range, DamageType.Magical);
-                var Pred = Lux.E.GetPrediction(Target);
-
-                if (Target != null && Target.IsValid)
-                {
-
-                    {
-                        Lux.E.Cast(Pred.CastPosition);
-                    }
-                }
-            }
-
-            //Cast R
-            if (user <= TargetSelector.GetTarget(Lux.R.Range, DamageType.Magical).HealthPercent && Lux.R.IsReady())
-            {
-                var Target = TargetSelector.GetTarget(Lux.R.Range, DamageType.Magical);
-                var Pred = Lux.R.GetPrediction(Target);
-
-                if (Target != null && Target.IsValid)
-                {
-
-                    {
-                        Lux.R.Cast(Pred.CastPosition);
-                    }
-                }
-            }
-
 
         }
 
 
         public static void Combo()
         {
-                   
+
+            if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo))
+            {
+                var useq = config.ComboMenu["comboq"].Cast<CheckBox>().CurrentValue;
+                var usew = config.ComboMenu["combow"].Cast<CheckBox>().CurrentValue;
+                var usee = config.ComboMenu["comboe"].Cast<CheckBox>().CurrentValue;
+                var user = config.ComboMenu["combor"].Cast<Slider>().CurrentValue;
+
+                // Cast Q
+
+
+                if (Lux.Q.IsReady())
+                {
+                    var Target = TargetSelector.GetTarget(Lux.Q.Range, DamageType.Magical);
+
+
+                    if (Target != null && Target.IsValid)
+                    {
+                        Lux.Q.Cast(Target.Position);
+                    }
+                }
+
+                //Cast W
+                if (usew && Lux.W.IsReady())
+                {
+
+                    {
+                        Lux.W.Cast();
+                    }
+                }
+
+                //Cast E
+                if (usee && Lux.E.IsReady())
+                {
+                    var Target = TargetSelector.GetTarget(Lux.W.Range, DamageType.Magical);
+                    var Pred = Lux.E.GetPrediction(Target);
+
+                    if (Target != null && Target.IsValid)
+                    {
+
+                        {
+                            Lux.E.Cast(Pred.CastPosition);
+                        }
+                    }
+                }
+
+                //Cast R
+                if (user <= TargetSelector.GetTarget(Lux.R.Range, DamageType.Magical).HealthPercent && Lux.R.IsReady())
+                {
+                    var Target = TargetSelector.GetTarget(Lux.R.Range, DamageType.Magical);
+                    var Pred = Lux.R.GetPrediction(Target);
+
+                    if (Target != null && Target.IsValid)
+                    {
+
+                        {
+                            Lux.R.Cast(Pred.CastPosition);
+                        }
+                    }
+                }
+
+
+
+            }
         }
 
         public static void LaneClear()
