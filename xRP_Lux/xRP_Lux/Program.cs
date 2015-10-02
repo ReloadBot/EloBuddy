@@ -25,7 +25,7 @@ namespace xRP_Lux
             if (Player.Instance.ChampionName != "Lux") return;
 
             Loading.OnLoadingComplete += Game_OnStart;
-            
+            Game.OnUpdate += Game_OnUpdate;
             Drawing.OnDraw += OnDraw;
         }
 
@@ -33,22 +33,16 @@ namespace xRP_Lux
         {
             Chat.Print("xRP_Lux LOADED \n Have Fun \n Configure Auto Zhonyas");
 
+        }
+
+        private static void Game_OnUpdate(EventArgs args)
+        {
             if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo)) { Combo(); }
             if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.LaneClear)) { LaneClear(); }
             if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Harass)) { Harass(); }
 
         }
 
-       
-        
-           
-         
-
-            
-
-            
-            
-        
 
         public static void Combo()
         {
@@ -59,6 +53,8 @@ namespace xRP_Lux
             var user = config.ComboMenu["combor"].Cast<Slider>().CurrentValue;
 
             // Cast Q
+
+
             if (Lux.Q.IsReady())
             {
                 var Target = TargetSelector.GetTarget(Lux.Q.Range, DamageType.Magical);
