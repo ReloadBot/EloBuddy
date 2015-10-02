@@ -17,7 +17,7 @@ namespace xRP_Lux
 
         static void Main(string[] args)
         {
-            if (Player.Instance.ChampionName != "Lux1") return;
+            if (Player.Instance.ChampionName != "Lux") return;
 
             Loading.OnLoadingComplete += Game_OnStart;
             Game.OnUpdate += Game_OnUpdate;
