@@ -40,7 +40,7 @@ namespace xRP_Lux
 
         private static void Game_OnTick(EventArgs args)
         {
-           var xz = config.MiscMenu["zhonias"].Cast<Slider>().CurrentValue;
+           var zhonias = config.MiscMenu["xz"].Cast<Slider>().CurrentValue;
                       
           Item zhonias = new Item((int)ItemId.Zhonyas_Hourglass, 0);
 
@@ -48,7 +48,7 @@ namespace xRP_Lux
             if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.LaneClear)) { LaneClear(); }
             if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Harass)) { Harass(); }
 
-            if (zhonias.IsReady() && xz <= _player.HealthPercent)
+            if (zhonias.IsReady() && zhonias <= _player.HealthPercent)
             {
                 zhonias.Cast();
 
