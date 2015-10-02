@@ -40,6 +40,8 @@ namespace xRP_Lux
 
         private static void Game_OnTick(EventArgs args)
         {
+           var xz = config.MiscMenu["zhonias"].Cast<Slider>().CurrentValue;
+            
           
           Item zhonias = new Item((int)ItemId.Zhonyas_Hourglass, 0);
 
