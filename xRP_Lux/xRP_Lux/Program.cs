@@ -66,41 +66,63 @@ namespace xRP_Lux
             var usew = config.ComboMenu["combow"].Cast<CheckBox>().CurrentValue;
             var usee = config.ComboMenu["comboe"].Cast<CheckBox>().CurrentValue;
             var user = config.ComboMenu["combor"].Cast<Slider>().CurrentValue;
-          
 
-            var enemy = TargetSelector.GetTarget(Lux.R.Range, DamageType.Magical);
-            if (!enemy.IsValid) return;
-
-            if (Lux.Q.IsReady() && enemy.IsValid && Lux.Q.IsInRange(enemy) && useq)
+            // Cast Q
+            if (useq && Lux.Q.IsReady())
             {
-                Lux.Q.Cast(enemy);
+                var Target = TargetSelector.GetTarget(Lux.Q.Range, DamageType.Magical);
+                var Pred = Lux.Q.GetPrediction(Target);
+
+                if (Target != null && Target.IsValid)
+                {
+                    Lux.Q.Cast(Pred.CastPosition);
+                }
             }
 
-            if (Lux.W.IsReady() && usew)
+            //Cast W
+            if (usew && Lux.W.IsReady())
             {
-                Lux.W.Cast();
+                var Target = TargetSelector.GetTarget(Lux.W.Range, DamageType.Magical);
+
+                if (Target != null && Target.IsValid)
+                {
+                    Lux.W.Cast();
+                }
             }
 
-            if (Lux.E.IsReady() && Lux.E.IsInRange(enemy) && enemy.IsValid && usee)
+            //Cast E
+            if (usee && Lux.E.IsReady())
             {
-                Lux.E.Cast(enemy.Position);
+                var Target = TargetSelector.GetTarget(Lux.W.Range, DamageType.Magical);
+                var Pred = Lux.E.GetPrediction(Target);
+
+                if (Target != null && Target.IsValid)
+                {
+                    
+                    {
+                        Lux.E.Cast(Pred.CastPosition);
+                    }
+                }
             }
 
-            if (Lux.R.IsReady() && Lux.R.IsInRange(enemy) && enemy.IsValid && user <= enemy.HealthPercent)
+            //Cast R
+            if (user <= TargetSelector.GetTarget(Lux.W.Range, DamageType.Magical).HealthPercent && Lux.R.IsReady())
             {
-                Lux.R.Cast(enemy);
+                var Target = TargetSelector.GetTarget(Lux.W.Range, DamageType.Magical);
+                var Pred = Lux.E.GetPrediction(Target);
+
+                if (Target != null && Target.IsValid)
+                {
+
+                    {
+                        Lux.R.Cast(Pred.CastPosition);
+                    }
+                }
             }
 
-            if (Lux.Ignite.IsReady() 
-                && Lux.Ignite.IsInRange(enemy) 
-                && enemy.IsValid)
-               
-            {
-                Lux.Ignite.Cast(enemy);
-            }
 
-            
 
+                   
         }
 
         public static void LaneClear()
