@@ -59,12 +59,11 @@ namespace xRP_Lux
 
                 if (Lux.Q.IsReady())
                 {
-                    var Target = TargetSelector.GetTarget(Lux.Q.Range, DamageType.Magical);
+                    var target = TargetSelector.GetTarget(Lux.Q.Range, DamageType.Magical);
 
-
-                    if (Target != null && Target.IsValid)
+                    if (target != null && target.IsValid)
                     {
-                        Lux.Q.Cast(Target.Position);
+                        Lux.Q.Cast(target);
                     }
                 }
 
@@ -114,24 +113,30 @@ namespace xRP_Lux
 
         public static void LaneClear()
         {
-            var farmq = config.FarMenu["farmq"].Cast<CheckBox>().CurrentValue;
-            var farme = config.FarMenu["farme"].Cast<Slider>().CurrentValue;
-            var minions = ObjectManager.Get<Obj_AI_Minion>().OrderBy(m => m.Health).Where(m => m.IsEnemy);
-
-            if (minions == null) return;
-
-            foreach (var minion in minions)
-            if (Lux.Q.IsReady() && Lux.Q.IsInRange(minion) && farmq)
+            if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.LaneClear))
             {
-                Lux.Q.Cast(minion);
+                LaneClear();
             }
+            {
+                var farmq = config.FarMenu["farmq"].Cast<CheckBox>().CurrentValue;
+                var farme = config.FarMenu["farme"].Cast<Slider>().CurrentValue;
+                var minions = ObjectManager.Get<Obj_AI_Minion>().OrderBy(m => m.Health).Where(m => m.IsEnemy);
 
-            foreach (var minion in minions)
-                if (Lux.E.IsReady() && Lux.E.IsInRange(minion) && farme >= minion.CastRange)
-                {
-                    Lux.E.Cast(minion);
-                }
-            
+                if (minions == null) return;
+
+                foreach (var minion in minions)
+                    if (Lux.Q.IsReady() && Lux.Q.IsInRange(minion) && farmq)
+                    {
+                        Lux.Q.Cast(minion);
+                    }
+
+                foreach (var minion in minions)
+                    if (Lux.E.IsReady() && Lux.E.IsInRange(minion) && farme >= minion.CastRange)
+                    {
+                        Lux.E.Cast(minion);
+                    }
+
+            }
         }
 
         public static void Harass()
