@@ -67,22 +67,22 @@ namespace xRP_Lux
             var enemy = TargetSelector.GetTarget(3340, DamageType.Magical);
             if (!enemy.IsValid) return;
 
-            if (enemy.IsValid && Lux.Q.IsReady() && enemy.IsValid && Lux.Q.IsInRange(enemy) && useq)
+            if (Lux.Q.IsReady() && enemy.IsValid && Lux.Q.IsInRange(enemy) && useq)
             {
                 Lux.Q.Cast(enemy);
             }
 
-            if (enemy.IsValid && Lux.W.IsReady() && usew)
+            if (Lux.W.IsReady() && usew)
             {
                 Lux.W.Cast();
             }
 
-            if (enemy.IsValid && Lux.E.IsReady() && Lux.E.IsInRange(enemy) && enemy.IsValid && usee)
+            if (Lux.E.IsReady() && Lux.E.IsInRange(enemy) && enemy.IsValid && usee)
             {
                 Lux.E.Cast(enemy.Position);
             }
 
-            if (enemy.IsValid && Lux.R.IsReady() && Lux.R.IsInRange(enemy) && enemy.IsValid && user <= enemy.HealthPercent)
+            if (Lux.R.IsReady() && Lux.R.IsInRange(enemy) && enemy.IsValid && user <= enemy.HealthPercent)
             {
                 Lux.R.Cast(enemy);
             }
