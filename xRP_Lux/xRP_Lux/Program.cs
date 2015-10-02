@@ -12,17 +12,12 @@ namespace xRP_Lux
     class Program
     {
 
-#region ignite
-
-
-     
-#endregion
 
         public static AIHeroClient _player { get { return ObjectManager.Player; } }
 
         static void Main(string[] args)
         {
-            if (Player.Instance.ChampionName != "Lux") return;
+            if (Player.Instance.ChampionName != "Lux1") return;
 
             Loading.OnLoadingComplete += Game_OnStart;
             Game.OnUpdate += Game_OnUpdate;
