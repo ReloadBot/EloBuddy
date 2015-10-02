@@ -82,9 +82,7 @@ namespace xRP_Lux
             //Cast W
             if (usew && Lux.W.IsReady())
             {
-                var Target = TargetSelector.GetTarget(Lux.W.Range, DamageType.Magical);
-
-                if (Target != null && Target.IsValid)
+                
                 {
                     Lux.W.Cast();
                 }
