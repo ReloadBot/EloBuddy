@@ -104,10 +104,10 @@ namespace xRP_Lux
             }
 
             //Cast R
-            if (user <= TargetSelector.GetTarget(Lux.W.Range, DamageType.Magical).HealthPercent && Lux.R.IsReady())
+            if (user <= TargetSelector.GetTarget(Lux.R.Range, DamageType.Magical).HealthPercent && Lux.R.IsReady())
             {
-                var Target = TargetSelector.GetTarget(Lux.W.Range, DamageType.Magical);
-                var Pred = Lux.E.GetPrediction(Target);
+                var Target = TargetSelector.GetTarget(Lux.R.Range, DamageType.Magical);
+                var Pred = Lux.R.GetPrediction(Target);
 
                 if (Target != null && Target.IsValid)
                 {
