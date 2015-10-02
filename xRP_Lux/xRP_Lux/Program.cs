@@ -43,17 +43,19 @@ namespace xRP_Lux
            var zonia = config.MiscMenu["xz"].Cast<Slider>().CurrentValue;                     
           Item zhonias = new Item((int)ItemId.Zhonyas_Hourglass, 0);
 
+          #region Auto Zonias
+          if (zhonias.IsReady() && zonia <= _player.HealthPercent)
+          {
+              zhonias.Cast();
+
+          }
+          #endregion
+
             if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo)) { Combo(); }
             if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.LaneClear)) { LaneClear(); }
             if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Harass)) { Harass(); }
 
-            #region Auto Zonias
-            if (zhonias.IsReady() && zonia <= _player.HealthPercent)
-            {
-                zhonias.Cast();
-
-            }
-            #endregion
+            
             
         }
 
@@ -64,9 +66,9 @@ namespace xRP_Lux
             var usew = config.ComboMenu["combow"].Cast<CheckBox>().CurrentValue;
             var usee = config.ComboMenu["comboe"].Cast<CheckBox>().CurrentValue;
             var user = config.ComboMenu["combor"].Cast<Slider>().CurrentValue;
-            var ignite = config.MiscMenu["xs"].Cast<Slider>().CurrentValue;
+          
 
-            var enemy = TargetSelector.GetTarget(3340, DamageType.Magical);
+            var enemy = TargetSelector.GetTarget(Lux.R.Range, DamageType.Magical);
             if (!enemy.IsValid) return;
 
             if (Lux.Q.IsReady() && enemy.IsValid && Lux.Q.IsInRange(enemy) && useq)
