@@ -11,7 +11,7 @@ namespace xRP_Lux
         public static Spell.Active W;
         public static Spell.Skillshot E;
         public static Spell.Skillshot R;
-        public static Spell.Targeted Ignite;
+        
 
         static Lux()
         {
@@ -20,12 +20,6 @@ namespace xRP_Lux
             E = new Spell.Skillshot(SpellSlot.E, 1100, SkillShotType.Circular);
             R = new Spell.Skillshot(SpellSlot.R, 3340, SkillShotType.Linear);
 
-            SpellDataInst Sum1 = Program._player.Spellbook.GetSpell(SpellSlot.Summoner1);
-            SpellDataInst Sum2 = Program._player.Spellbook.GetSpell(SpellSlot.Summoner2);
-            if (Sum1.Name == "summonerdot")
-                Ignite = new Spell.Targeted(SpellSlot.Summoner1, 600);
-            else if (Sum2.Name == "summonerdot")
-                Ignite = new Spell.Targeted(SpellSlot.Summoner2, 600);
         }
 
     }

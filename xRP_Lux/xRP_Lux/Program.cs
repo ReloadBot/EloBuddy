@@ -15,10 +15,7 @@ namespace xRP_Lux
 #region ignite
 
 
-        public static float Ignite(Obj_AI_Base enemy)
-        {
-            return ((10 + (4 * Program._player.Level)) * 5) - ((enemy.HPRegenRate / 2) * 5);
-        }
+     
 #endregion
 
         public static AIHeroClient _player { get { return ObjectManager.Player; } }
@@ -40,16 +37,8 @@ namespace xRP_Lux
 
         private static void Game_OnTick(EventArgs args)
         {
-           var zonia = config.MiscMenu["xz"].Cast<Slider>().CurrentValue;                     
-          Item zhonias = new Item((int)ItemId.Zhonyas_Hourglass, 0);
-
-          #region Auto Zonias
-          if (zhonias.IsReady() && zonia <= _player.HealthPercent)
-          {
-              zhonias.Cast();
-
-          }
-          #endregion
+           
+         
 
             if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo)) { Combo(); }
             if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.LaneClear)) { LaneClear(); }
