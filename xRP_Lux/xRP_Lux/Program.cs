@@ -40,8 +40,8 @@ namespace xRP_Lux
 
         private static void Game_OnTick(EventArgs args)
         {
-            var xz = config.MiscMenu["xz"].Cast<Slider>().CurrentValue;
-            Item zhonias = new Item((int)ItemId.Zhonyas_Hourglass, 0);
+          
+          Item zhonias = new Item((int)ItemId.Zhonyas_Hourglass, 0);
 
             if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo)) { Combo(); }
             if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.LaneClear)) { LaneClear(); }
