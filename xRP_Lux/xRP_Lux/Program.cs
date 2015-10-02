@@ -45,7 +45,7 @@ namespace xRP_Lux
 
             if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo)) { Combo(); }
             if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.LaneClear)) { LaneClear(); }
-            //if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Harass)) { Harass(); }
+            if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Harass)) { Harass(); }
 
             if (zhonias.IsReady() && xz <= _player.HealthPercent)
             {
@@ -119,6 +119,26 @@ namespace xRP_Lux
                     Lux.E.Cast(minion);
                 }
             
+        }
+
+        public static void Harass()
+        {
+            var harassq = config.HarassMenu["harassq"].Cast<CheckBox>().CurrentValue;
+            var harasse = config.HarassMenu["harasse"].Cast<CheckBox>().CurrentValue;
+
+            var enemy = TargetSelector.GetTarget(3340, DamageType.Magical);
+
+            if (harassq && Lux.Q.IsReady() && Lux.Q.IsInRange(enemy) && enemy.IsValid)
+            {
+                Lux.Q.Cast(enemy);
+
+            }
+
+            if (harasse && Lux.E.IsReady() && Lux.E.IsInRange(enemy) && enemy.IsValid)
+            {
+                Lux.E.Cast(enemy.Position);
+            }
+
         }
 
         private static void OnDraw(EventArgs args)

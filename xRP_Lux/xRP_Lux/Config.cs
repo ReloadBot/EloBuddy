@@ -18,6 +18,10 @@ namespace xRP_Lux
             ComboMenu.Add("comboe", new CheckBox("Use (E) in Combo", true));
             ComboMenu.Add("combor", new Slider("Min Life Percent to (R)", 30, 0, 100));
 
+            HarassMenu = Menu.AddSubMenu("Harass Menu", "xharass");
+            HarassMenu.Add("harasq", new CheckBox("use (Q) to Harass", true));
+            HarassMenu.Add("harase", new CheckBox("use (E) to Harass", true));
+
             FarMenu = Menu.AddSubMenu("Farm Menu", "xfarm");
             FarMenu.Add("farmq", new CheckBox("Use (Q) to Farm", true));
             FarMenu.Add("farmw", new CheckBox("Use (W) to Farm", true));
