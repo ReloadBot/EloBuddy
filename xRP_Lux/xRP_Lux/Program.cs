@@ -45,14 +45,14 @@ namespace xRP_Lux
 
             
             {
-                var useq = config.ComboMenu["comboq"].Cast<CheckBox>().CurrentValue;
-                var usew = config.ComboMenu["combow"].Cast<CheckBox>().CurrentValue;
-                var usee = config.ComboMenu["comboe"].Cast<CheckBox>().CurrentValue;
-                var user = config.ComboMenu["combor"].Cast<Slider>().CurrentValue;
+                
+                
+                
+                
 
                 // Cast Q
 
-
+                var useq = config.ComboMenu["comboq"].Cast<CheckBox>().CurrentValue;
                 if (Lux.Q.IsReady() && useq)
                 {
                     var target = TargetSelector.GetTarget(Lux.Q.Range, DamageType.Magical);
@@ -64,6 +64,7 @@ namespace xRP_Lux
                 }
 
                 //Cast W
+                var usew = config.ComboMenu["combow"].Cast<CheckBox>().CurrentValue;
                 if (usew && Lux.W.IsReady())
                 {
 
@@ -73,6 +74,7 @@ namespace xRP_Lux
                 }
 
                 //Cast E
+                var usee = config.ComboMenu["comboe"].Cast<CheckBox>().CurrentValue;
                 if (usee && Lux.E.IsReady())
                 {
                     var Target = TargetSelector.GetTarget(Lux.W.Range, DamageType.Magical);
@@ -82,22 +84,23 @@ namespace xRP_Lux
                     {
 
                         {
-                            Lux.E.Cast(Pred.CastPosition);
+                            Lux.E.Cast(Target.Position);
                         }
                     }
                 }
 
                 //Cast R
+                var user = config.ComboMenu["combor"].Cast<Slider>().CurrentValue;
                 if (user <= TargetSelector.GetTarget(Lux.R.Range, DamageType.Magical).HealthPercent && Lux.R.IsReady())
                 {
                     var Target = TargetSelector.GetTarget(Lux.R.Range, DamageType.Magical);
-                    var Pred = Lux.R.GetPrediction(Target);
+
 
                     if (Target != null && Target.IsValid)
                     {
 
                         {
-                            Lux.R.Cast(Pred.CastPosition);
+                            Lux.R.Cast(Target.Position);
                         }
                     }
                 }
@@ -109,11 +112,11 @@ namespace xRP_Lux
 
         public static void LaneClear()
         {
-            if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.LaneClear))
-            {
+            
                 LaneClear();
-            }
             {
+
+
                 var farmq = config.FarMenu["farmq"].Cast<CheckBox>().CurrentValue;
                 var farme = config.FarMenu["farme"].Cast<Slider>().CurrentValue;
                 var minions = ObjectManager.Get<Obj_AI_Minion>().OrderBy(m => m.Health).Where(m => m.IsEnemy);
@@ -131,9 +134,10 @@ namespace xRP_Lux
                     {
                         Lux.E.Cast(minion);
                     }
-
             }
+
         }
+        
 
         public static void Harass()
         {
