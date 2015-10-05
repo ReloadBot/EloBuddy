@@ -36,7 +36,7 @@ namespace xRP_Tristana
         {
             Loading.OnLoadingComplete += Game_OnStart;
             Drawing.OnDraw += Game_OnDraw;
-            Game.OnUpdate += Game_OnUpdate;
+          
             Game.OnTick += Game_OnTick;
 
         }
@@ -64,7 +64,6 @@ namespace xRP_Tristana
             ComboMenu.Add("combow", new CheckBox("Use (W) in Combo", true));
             ComboMenu.Add("comboe", new CheckBox("Use (E) in Combo", true));
             ComboMenu.Add("combor", new CheckBox("Use (R) to Finish", true));
-            ComboMenu.Add("wtower", new CheckBox("Dont (W) under tower", true));
 
             LaneMenu = Menu.AddSubMenu("Lane Clean", "xlane");
             LaneMenu.Add("eLane", new CheckBox("Use (E) in LaneClear", true));
@@ -78,9 +77,13 @@ namespace xRP_Tristana
 
         private static void Game_OnTick(EventArgs args)
         {
-            if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.LaneClear))
+            if (Orbwalker.ActiveModesFlags == (Orbwalker.ActiveModes.LaneClear))
             {
                 LaneClear();
+            }
+            if (Orbwalker.ActiveModesFlags == (Orbwalker.ActiveModes.Combo))
+            {
+                Combo();
             }
         }
 
@@ -102,11 +105,11 @@ namespace xRP_Tristana
         }
 
 
-        public static void Game_OnUpdate(EventArgs args)
+        private static void Combo()
         {
+
             var enemy = TargetSelector.GetTarget(1000, DamageType.Physical);
             var useR = ComboMenu["combor"].Cast<CheckBox>().CurrentValue;
-            var tower = ObjectManager.Get<Obj_AI_Turret>().FirstOrDefault(a => a.IsEnemy && !a.IsDead && a.Distance(_Player) < _Player.AttackRange);
 
 
 
@@ -135,9 +138,8 @@ namespace xRP_Tristana
                     R.Cast(enemy);
                 }
             }
+
         }
-
-
 
             private static void LaneClear()
         {

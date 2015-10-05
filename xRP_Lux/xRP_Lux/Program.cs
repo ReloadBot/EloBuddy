@@ -33,8 +33,9 @@ namespace xRP_Lux
         private static void Game_OnUpdate(EventArgs args)
         {
             
-            if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.LaneClear)) { LaneClear(); }
-            if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Harass)) { Harass(); }
+            if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.LaneClear) { LaneClear(); }
+            if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Harass) { Harass(); }
+            if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Combo) {Combo();}
 
         }
 
@@ -42,7 +43,7 @@ namespace xRP_Lux
         public static void Combo()
         {
 
-            if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo))
+            
             {
                 var useq = config.ComboMenu["comboq"].Cast<CheckBox>().CurrentValue;
                 var usew = config.ComboMenu["combow"].Cast<CheckBox>().CurrentValue;
@@ -52,7 +53,7 @@ namespace xRP_Lux
                 // Cast Q
 
 
-                if (Lux.Q.IsReady())
+                if (Lux.Q.IsReady() && useq)
                 {
                     var target = TargetSelector.GetTarget(Lux.Q.Range, DamageType.Magical);
 
