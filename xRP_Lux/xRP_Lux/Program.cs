@@ -20,7 +20,7 @@ namespace xRP_Lux
             if (Player.Instance.ChampionName != "Lux") return;
 
             Loading.OnLoadingComplete += Game_OnStart;
-            Game.OnUpdate += Game_OnUpdate;
+            Game.OnTick += Game_OnTick;
             Drawing.OnDraw += OnDraw;
         }
 
@@ -30,7 +30,7 @@ namespace xRP_Lux
 
         }
 
-        private static void Game_OnUpdate(EventArgs args)
+        public static void Game_OnTick(EventArgs args)
         {
             
             if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.LaneClear) { LaneClear(); }
@@ -39,17 +39,10 @@ namespace xRP_Lux
 
         }
 
-
         public static void Combo()
         {
-
-            
+          
             {
-                
-                
-                
-                
-
                 // Cast Q
 
                 var useq = config.ComboMenu["comboq"].Cast<CheckBox>().CurrentValue;
@@ -144,17 +137,25 @@ namespace xRP_Lux
             var harassq = config.HarassMenu["harassq"].Cast<CheckBox>().CurrentValue;
             var harasse = config.HarassMenu["harasse"].Cast<CheckBox>().CurrentValue;
 
-            var enemy = TargetSelector.GetTarget(3340, DamageType.Magical);
+            
 
-            if (harassq && Lux.Q.IsReady() && Lux.Q.IsInRange(enemy) && enemy.IsValid)
+            if (harassq && Lux.Q.IsReady())
             {
-                Lux.Q.Cast(enemy);
-
+                var enemy = TargetSelector.GetTarget(Lux.Q.Range, DamageType.Magical);
+                if (enemy.IsValid && enemy.IsRanged)
+                {
+                    Lux.Q.Cast(enemy);
+                }
             }
 
-            if (harasse && Lux.E.IsReady() && Lux.E.IsInRange(enemy) && enemy.IsValid)
+            if (harasse && Lux.E.IsReady())
             {
-                Lux.E.Cast(enemy.Position);
+                var enemy = TargetSelector.GetTarget(Lux.E.Range, DamageType.Magical);
+                if (enemy.IsValid && enemy.IsRanged)
+
+                {
+                    Lux.E.Cast(enemy.Position);
+                }
             }
 
         }
