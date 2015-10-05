@@ -48,7 +48,6 @@ namespace xRP___Varus
 
             ComboMenu = Menu.AddSubMenu("Combo Menu", "xcombo");
             ComboMenu.Add("comboq", new CheckBox("Use (Q) in Combo", true));
-            ComboMenu.Add("combow", new CheckBox("Use (W) in Combo", true));
             ComboMenu.Add("comboe", new CheckBox("Use (E) in Combo", true));
             ComboMenu.Add("combor", new Slider  ("Min Enemy to (R)", 3, 0, 5 ));
 
@@ -74,17 +73,17 @@ namespace xRP___Varus
 
         private static void Game_OnTick(EventArgs args)
         {
-            if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo))
+            if (Orbwalker.ActiveModesFlags ==(Orbwalker.ActiveModes.Combo))
             {
                 Combo();
             }
 
-            if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.LaneClear))
+            if (Orbwalker.ActiveModesFlags == (Orbwalker.ActiveModes.LaneClear))
             {
                 LaneClear();
             }
 
-            if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Harass))
+            if (Orbwalker.ActiveModesFlags == (Orbwalker.ActiveModes.Harass))
             {
                 Harass();
             }
@@ -93,23 +92,17 @@ namespace xRP___Varus
         private static void Combo()
         {
 
-            if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo))
-
-            {
+            
+                var useq = ComboMenu["comboq"].Cast<CheckBox>().CurrentValue;
 
                 var enemy = TargetSelector.GetTarget(1625, DamageType.Physical);
+
                 if (!enemy.IsValid()) return;
 
 
-                if (Varus.Q.IsReady() && Varus.Q.IsInRange(enemy) && ComboMenu["comboq"].Cast<CheckBox>().CurrentValue)
+                if (Varus.Q.IsReady() && Varus.Q.IsInRange(enemy) && useq)
                 {
                     Varus.Q.Cast(enemy);
-                }
-
-                if (Varus.W.IsReady() && enemy.IsInAutoAttackRange(ObjectManager.Player) &&
-                    ComboMenu["combow"].Cast<CheckBox>().CurrentValue)
-                {
-                    Varus.W.Cast();
                 }
 
                 if (enemy.IsValid && Varus.E.IsReady() && Varus.E.IsInRange(enemy) &&
@@ -146,7 +139,7 @@ namespace xRP___Varus
                 }
 
             }
-        }
+        
 
 
         private static void LaneClear()
