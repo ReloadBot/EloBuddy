@@ -36,8 +36,7 @@ namespace xRP_Tristana
         {
             Loading.OnLoadingComplete += Game_OnStart;
             Drawing.OnDraw += Game_OnDraw;
-          
-            Game.OnTick += Game_OnTick;
+           Game.OnTick += Game_OnTick;
 
         }
 
@@ -108,33 +107,55 @@ namespace xRP_Tristana
         private static void Combo()
         {
 
-            var enemy = TargetSelector.GetTarget(1000, DamageType.Physical);
+
             var useR = ComboMenu["combor"].Cast<CheckBox>().CurrentValue;
+            var usew = ComboMenu["combow"].Cast<CheckBox>().CurrentValue;
+            var usee = ComboMenu["comboe"].Cast<CheckBox>().CurrentValue;
+            var useq = ComboMenu["comboq"].Cast<CheckBox>().CurrentValue;
 
 
 
-            if (!enemy.IsValid()) return;
 
             if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Combo)
             {
-                if (enemy.IsInAutoAttackRange(ObjectManager.Player) && Q.IsReady() && ComboMenu["comboq"].Cast<CheckBox>().CurrentValue)
+
+
+                if (Q.IsReady() && useq)
                 {
-                    Q.Cast();
+                    var Target = TargetSelector.GetTarget(Q.Range, DamageType.Physical);
+                    if (Target.IsValid && Q.IsInRange(Target))
+                    {
+                                       Q.Cast();
+                }
+            }
+
+                
+                if (W.IsReady() && usew)
+                {
+                    var Target = TargetSelector.GetTarget(W.Range, DamageType.Physical);
+                    if (_Player.Distance(Target) <= W.Range + _Player.GetAutoAttackRange() && W.IsInRange(Target) && Target.IsValid)
+                    {
+                        W.Cast(Target);
+                    }
                 }
 
-                if (W.IsReady() && _Player.Distance(enemy) <= W.Range + _Player.GetAutoAttackRange() && ComboMenu["combow"].Cast<CheckBox>().CurrentValue)
-                {
 
-                    W.Cast(enemy);
+                if (usee)
+                {
+                    var Target = TargetSelector.GetTarget(E.Range, DamageType.Physical);
+                    if (Target.IsValid && E.IsInRange(Target))
+                    {
+                        E.Cast(Target);
+                    }
                 }
 
-                if (E.IsInRange(enemy) && ComboMenu["comboe"].Cast<CheckBox>().CurrentValue)
-                {
-                    E.Cast(enemy);
-                }
 
-                if (R.IsReady() && useR && enemy.IsValidTarget(R.Range) && !enemy.IsDead && !enemy.IsZombie && enemy.Health <= Player.Instance.GetSpellDamage(enemy, SpellSlot.R))
+                if (R.IsReady() && useR )
                 {
+                    var enemy = TargetSelector.GetTarget(R.Range, DamageType.Physical);
+
+                    if (enemy.IsValidTarget(R.Range) && !enemy.IsDead && !enemy.IsZombie && enemy.Health <= Player.Instance.GetSpellDamage(enemy, SpellSlot.R))
+
                     R.Cast(enemy);
                 }
             }
@@ -142,8 +163,8 @@ namespace xRP_Tristana
         }
 
             private static void LaneClear()
-        {
-            var minion = ObjectManager.Get<Obj_AI_Minion>().FirstOrDefault(a => a.IsEnemy && !a.IsDead && a.Distance(_Player) < _Player.AttackRange);
+            {
+                var minion = EntityManager.MinionsAndMonsters.AllMinions;
             var tower = ObjectManager.Get<Obj_AI_Turret>().FirstOrDefault(a => a.IsEnemy && !a.IsDead && a.Distance(_Player) < _Player.AttackRange);
             if (minion == null)
                 if (tower == null)
@@ -152,10 +173,10 @@ namespace xRP_Tristana
             var useE = LaneMenu["eLane"].Cast<CheckBox>().CurrentValue;
             var useETower = LaneMenu["Etower"].Cast<CheckBox>().CurrentValue;
 
-
+                foreach (var minions in minion)                                
             if (useE && E.IsReady() && (tower == null))
             {
-                E.Cast(minion);
+                E.Cast(minions);
             }
 
             if (useETower && E.IsReady())
