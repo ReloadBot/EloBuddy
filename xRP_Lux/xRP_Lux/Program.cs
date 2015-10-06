@@ -20,8 +20,10 @@ namespace xRP_Lux
             if (Player.Instance.ChampionName != "Lux") return;
 
             Loading.OnLoadingComplete += Game_OnStart;
-            Game.OnTick += Game_OnTick;
             Drawing.OnDraw += OnDraw;
+            Game.OnTick += Game_OnTick;
+            Game.OnUpdate += Game_OnUpdate;
+            
         }
 
         private static void Game_OnStart(EventArgs args)
@@ -30,16 +32,37 @@ namespace xRP_Lux
 
         }
 
-        public static void Game_OnTick(EventArgs args)
+        private static void Game_OnTick(EventArgs args)
         {
-            
-            if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.LaneClear) { LaneClear(); }
-            if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Harass) { Harass(); }
-            if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Combo) {Combo();}
+            Item zhonias = new Item((int)ItemId.Zhonyas_Hourglass, 0);
+            var usezonias = config.MiscMenu["xz"].Cast<Slider>().CurrentValue;
+
+            if (usezonias <= _player.HealthPercent)
+            {
+                if (zhonias.IsReady())
+                {
+                    zhonias.Cast();
+                }
+            }
+        }
+
+        private static void Game_OnUpdate(EventArgs args)
+        {
+            switch (Orbwalker.ActiveModesFlags)
+            {
+                case Orbwalker.ActiveModes.Combo:Combo();
+                    break;
+                case Orbwalker.ActiveModes.LaneClear:LaneClear();
+                    break;
+                case Orbwalker.ActiveModes.Harass:Harass();
+                    break;
+            }
+
+
 
         }
 
-        public static void Combo()
+        private static void Combo()
         {
           
             {
@@ -49,7 +72,6 @@ namespace xRP_Lux
                 if (Lux.Q.IsReady() && useq)
                 {
                     var target = TargetSelector.GetTarget(Lux.Q.Range, DamageType.Magical);
-
                     if (target != null && target.IsValid)
                     {
                         Lux.Q.Cast(target);
@@ -71,8 +93,6 @@ namespace xRP_Lux
                 if (usee && Lux.E.IsReady())
                 {
                     var Target = TargetSelector.GetTarget(Lux.W.Range, DamageType.Magical);
-                    var Pred = Lux.E.GetPrediction(Target);
-
                     if (Target != null && Target.IsValid)
                     {
 
@@ -87,8 +107,6 @@ namespace xRP_Lux
                 if (user <= TargetSelector.GetTarget(Lux.R.Range, DamageType.Magical).HealthPercent && Lux.R.IsReady())
                 {
                     var Target = TargetSelector.GetTarget(Lux.R.Range, DamageType.Magical);
-
-
                     if (Target != null && Target.IsValid)
                     {
 
@@ -103,7 +121,7 @@ namespace xRP_Lux
             }
         }
 
-        public static void LaneClear()
+        private static void LaneClear()
         {
             
                 LaneClear();
@@ -132,13 +150,12 @@ namespace xRP_Lux
         }
         
 
-        public static void Harass()
+        private static void Harass()
         {
             var harassq = config.HarassMenu["harassq"].Cast<CheckBox>().CurrentValue;
             var harasse = config.HarassMenu["harasse"].Cast<CheckBox>().CurrentValue;
 
-            
-
+           
             if (harassq && Lux.Q.IsReady())
             {
                 var enemy = TargetSelector.GetTarget(Lux.Q.Range, DamageType.Magical);
@@ -160,7 +177,7 @@ namespace xRP_Lux
 
         }
 
-        private static void OnDraw(EventArgs args)
+        public static void OnDraw(EventArgs args)
         {
             var drawq = config.ComboMenu["drawq"].Cast<CheckBox>().CurrentValue;
             var drawR = config.ComboMenu["drawr"].Cast<CheckBox>().CurrentValue;
