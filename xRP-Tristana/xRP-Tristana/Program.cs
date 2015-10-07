@@ -44,10 +44,14 @@ namespace xRP_Tristana
         {
             Chat.Print("xRP Tristana LOADED \n Have Fun.");
 
+
+
             Q = new Spell.Active(SpellSlot.Q, 550 );
             W = new Spell.Skillshot(SpellSlot.W, 825, SkillShotType.Circular, 250, Int32.MaxValue, 80);
-            E = new Spell.Targeted(SpellSlot.E, 550);
-            R = new Spell.Targeted(SpellSlot.R, 550);
+            E = new Spell.Targeted(SpellSlot.E, 625);
+            R = new Spell.Targeted(SpellSlot.R, 700);
+
+           
 
 
 
