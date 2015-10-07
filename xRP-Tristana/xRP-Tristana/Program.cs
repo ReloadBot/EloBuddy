@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using EloBuddy;
 using EloBuddy.SDK;
@@ -12,6 +13,7 @@ using Color = System.Drawing.Color;
 
 namespace xRP_Tristana
 {
+
     class Program
     {
         public static Menu Menu,
@@ -43,6 +45,7 @@ namespace xRP_Tristana
         private static void Game_OnStart(EventArgs args)
         {
             Chat.Print("xRP Tristana LOADED \n Have Fun.");
+            
 
 
 
@@ -51,6 +54,7 @@ namespace xRP_Tristana
             E = new Spell.Targeted(SpellSlot.E, 625);
             R = new Spell.Targeted(SpellSlot.R, 700);
 
+           
            
 
 
