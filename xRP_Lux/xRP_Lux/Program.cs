@@ -37,7 +37,7 @@ namespace xRP_Lux
             Item zhonias = new Item((int)ItemId.Zhonyas_Hourglass, 0);
             var usezonias = config.MiscMenu["xz"].Cast<Slider>().CurrentValue;
 
-            if (usezonias <= _player.HealthPercent)
+            if (_player.HealthPercent <= usezonias)
             {
                 if (zhonias.IsReady())
                 {
