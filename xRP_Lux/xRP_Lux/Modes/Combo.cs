@@ -1,4 +1,4 @@
-﻿using xRp_Lux.Modes;
+﻿
 using EloBuddy;
 using EloBuddy.SDK;
 
@@ -18,12 +18,31 @@ namespace xRp_Lux.Modes
         {
             if (Settings.UseQ && Q.IsReady())
             {
-                var target = TargetSelector.GetTarget(Q.Range, DamageType.Physical);
+                var target = TargetSelector.GetTarget(Q.Range, DamageType.Magical);
                 if (target != null)
                 {
                     Q.Cast(target);
                 }
-            }
+            
+
         }
+            if (Settings.UseW && W.IsReady())
+            {
+                var target = TargetSelector.GetTarget(Q.Range, DamageType.Magical);
+                if (target != null)
+                {
+                    W.Cast();
+                }
+            }
+            if (Settings.UseE && E.IsReady())
+            {
+                var target = TargetSelector.GetTarget(Q.Range, DamageType.Magical);
+                if (target != null)
+                {
+                    E.Cast(target.Position);
+                }
+            }
+
+
     }
 }

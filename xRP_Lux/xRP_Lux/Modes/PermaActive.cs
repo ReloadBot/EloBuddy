@@ -1,4 +1,8 @@
-﻿namespace xRp_Lux.Modes
+﻿using EloBuddy;
+using EloBuddy.SDK;
+using Settings = xRp_Lux.Config.Modes.Misc;
+
+namespace xRp_Lux.Modes
 {
     public sealed class PermaActive : ModeBase
     {
@@ -12,6 +16,13 @@
         {
             // TODO: Add permaactive logic here, good for spells like Ignite or Smite
 
+             Item zhonias = new Item((int)ItemId.Zhonyas_Hourglass, 0);
+
+            if (ObjectManager.Player.HealthPercent <= Settings.Az)
+                    
+            {
+                zhonias.Cast();
+            }
 
         }
     }

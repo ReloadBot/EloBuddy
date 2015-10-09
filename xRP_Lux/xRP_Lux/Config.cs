@@ -45,6 +45,11 @@ namespace xRp_Lux
 
 
                 Harass.Initialize();
+                Menu.AddSeparator();
+
+                Misc.Initialize();
+                Menu.AddSeparator();
+
             }
 
             public static void Initialize()
@@ -124,6 +129,26 @@ namespace xRp_Lux
                 public static void Initialize()
                 {
                 }
+            }
+
+            public static class Misc
+            {
+                public static int Az
+                {
+                    get { return Menu["AutoZhonia"].Cast<Slider>().CurrentValue; }
+                }
+
+                static Misc()
+                {
+                    Menu.Add("harassMana", new Slider("Min to Zhonias", 20));
+                }
+
+
+
+                public static void Initialize()
+                {
+                }
+
             }
         }
     }
