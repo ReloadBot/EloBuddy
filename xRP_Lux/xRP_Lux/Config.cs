@@ -1,49 +1,130 @@
 ﻿using EloBuddy.SDK.Menu;
 using EloBuddy.SDK.Menu.Values;
 
-namespace xRP_Lux
+// ReSharper disable InconsistentNaming
+// ReSharper disable MemberHidesStaticFromOuterClass
+namespace xRp_Lux
 {
-    public static class config
+    // I can't really help you with my layout of a good config class
+    // since everyone does it the way they like it most, go checkout my
+    // config classes I make on my GitHub if you wanna take over the
+    // complex way that I use
+    public static class Config
     {
-        public static Menu Menu, ComboMenu, FarMenu, HarassMenu, DrawMenu, MiscMenu;
+        private const string MenuName = "luxmenu";
 
-        static config()
+        private static readonly Menu Menu;
+
+        static Config()
         {
-            Menu = MainMenu.AddMenu("xRP_Lux", "xlux");
-            Menu.AddSeparator();
 
-            ComboMenu = Menu.AddSubMenu("Combo Menu", "xcombo");
-            ComboMenu.Add("comboq", new CheckBox("Use (Q) in Combo", true));
-            ComboMenu.Add("combow", new CheckBox("Use (W) in Combo", true));
-            ComboMenu.Add("comboe", new CheckBox("Use (E) in Combo", true));
-            ComboMenu.Add("combor", new Slider("Min Life Percent to (R)", 30, 0, 100));
-
-            HarassMenu = Menu.AddSubMenu("Harass Menu", "xharass");
-            HarassMenu.Add("harasq", new CheckBox("use (Q) to Harass", true));
-            HarassMenu.Add("harase", new CheckBox("use (E) to Harass", true));
-
-            FarMenu = Menu.AddSubMenu("Farm Menu", "xfarm");
-            FarMenu.Add("farmq", new CheckBox("Use (Q) to Farm", true));
-            FarMenu.Add("farmw", new CheckBox("Use (W) to Farm", true));
-            FarMenu.Add("farme", new Slider("Use (E) to Farm", 10,0,30));
-
-            DrawMenu = Menu.AddSubMenu("Farm Menu", "xfarm");
-            DrawMenu.Add("drawq", new CheckBox("Draw (Q)", true));
-            DrawMenu.Add("draww", new CheckBox("Draw(W)", true));
-            DrawMenu.Add("drawr", new CheckBox("Draw(R)", true));
-
-            MiscMenu = Menu.AddSubMenu("Misc Menu", "xmisc");
-            MiscMenu.Add("xz", new Slider("Auto Zhonia When Life <=", 15, 0, 100));
-            MiscMenu.Add("xs", new CheckBox("Auto Ignite ",true));
-
-            
+            Menu = MainMenu.AddMenu(MenuName, MenuName.ToLower());
+            Menu.AddGroupLabel("xRP_Lux Menu");
+            Menu.AddLabel("Created by: xRP");
+            Menu.AddLabel("Have Fun / Good Luck");
 
 
+            Modes.Initialize();
         }
 
+        public static void Initialize()
+        {
+        }
 
+        public static class Modes
+        {
+            private static readonly Menu Menu;
+
+            static Modes()
+            {
+                Menu = Config.Menu.AddSubMenu("Modes");
+
+
+                Combo.Initialize();
+                Menu.AddSeparator();
+
+
+                Harass.Initialize();
+            }
+
+            public static void Initialize()
+            {
+            }
+
+            public static class Combo
+            {
+                private static readonly CheckBox _useQ;
+                private static readonly CheckBox _useW;
+                private static readonly CheckBox _useE;
+                private static readonly CheckBox _useR;
+
+                public static bool UseQ
+                {
+                    get { return _useQ.CurrentValue; }
+                }
+                public static bool UseW
+                {
+                    get { return _useW.CurrentValue; }
+                }
+                public static bool UseE
+                {
+                    get { return _useE.CurrentValue; }
+                }
+                public static bool UseR
+                {
+                    get { return _useR.CurrentValue; }
+                }
+
+                static Combo()
+                {
+
+                    Menu.AddGroupLabel("Combo");
+                    _useQ = Menu.Add("comboUseQ", new CheckBox("Use Q"));
+                    _useW = Menu.Add("comboUseW", new CheckBox("Use W"));
+                    _useE = Menu.Add("comboUseE", new CheckBox("Use E"));
+                    _useR = Menu.Add("comboUseR", new CheckBox("Use R", false));
+                }
+
+                public static void Initialize()
+                {
+                }
+            }
+
+            public static class Harass
+            {
+                public static bool UseQ
+                {
+                    get { return Menu["harassUseQ"].Cast<CheckBox>().CurrentValue; }
+                }
+
+                public static bool UseE
+                {
+                    get { return Menu["harassUseE"].Cast<CheckBox>().CurrentValue; }
+                }
+                public static bool UseR
+                {
+                    get { return Menu["harassUseR"].Cast<CheckBox>().CurrentValue; }
+                }
+                public static int Mana
+                {
+                    get { return Menu["harassMana"].Cast<Slider>().CurrentValue; }
+                }
+
+                static Harass()
+                {
+
+                    Menu.AddGroupLabel("Harass");
+                    Menu.Add("harassUseQ", new CheckBox("Use Q"));
+                    Menu.Add("harassUseE", new CheckBox("Use E"));
+                    Menu.Add("harassUseR", new CheckBox("Use R", false)); // Default false
+
+                    Menu.Add("harassMana", new Slider("Maximum mana usage in percent ({0}%)", 40));
+                }
+
+                public static void Initialize()
+                {
+                }
+            }
+        }
     }
-
-
-
 }
