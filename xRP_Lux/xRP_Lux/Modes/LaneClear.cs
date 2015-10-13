@@ -1,4 +1,5 @@
 ﻿using EloBuddy.SDK;
+using xRP_Lux.Modes;
 
 namespace xRp_Lux.Modes
 {

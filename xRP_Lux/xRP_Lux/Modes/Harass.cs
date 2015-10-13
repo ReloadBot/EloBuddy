@@ -1,6 +1,6 @@
 ﻿using EloBuddy;
 using EloBuddy.SDK;
-
+using xRP_Lux.Modes;
 using Settings = xRp_Lux.Config.Modes.Harass;
 
 namespace xRp_Lux.Modes
