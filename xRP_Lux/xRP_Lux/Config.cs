@@ -1,4 +1,5 @@
-﻿using EloBuddy.SDK.Menu;
+﻿
+using EloBuddy.SDK.Menu;
 using EloBuddy.SDK.Menu.Values;
 
 // ReSharper disable InconsistentNaming
@@ -11,7 +12,7 @@ namespace xRp_Lux
     // complex way that I use
     public static class Config
     {
-        private const string MenuName = "luxmenu";
+        private const string MenuName = "xRP Lux";
 
         private static readonly Menu Menu;
 
@@ -25,6 +26,8 @@ namespace xRp_Lux
 
 
             Modes.Initialize();
+            Misc.Initialize();
+
         }
 
         public static void Initialize()
@@ -47,8 +50,6 @@ namespace xRp_Lux
                 Harass.Initialize();
                 Menu.AddSeparator();
 
-                Misc.Initialize();
-                Menu.AddSeparator();
 
             }
 
@@ -56,12 +57,13 @@ namespace xRp_Lux
             {
             }
 
+
             public static class Combo
             {
                 private static readonly CheckBox _useQ;
                 private static readonly CheckBox _useW;
                 private static readonly CheckBox _useE;
-                private static readonly CheckBox _useR;
+                private static readonly Slider _useR;
 
                 public static bool UseQ
                 {
@@ -75,7 +77,7 @@ namespace xRp_Lux
                 {
                     get { return _useE.CurrentValue; }
                 }
-                public static bool UseR
+                public static int UseR
                 {
                     get { return _useR.CurrentValue; }
                 }
@@ -87,7 +89,7 @@ namespace xRp_Lux
                     _useQ = Menu.Add("comboUseQ", new CheckBox("Use Q"));
                     _useW = Menu.Add("comboUseW", new CheckBox("Use W"));
                     _useE = Menu.Add("comboUseE", new CheckBox("Use E"));
-                    _useR = Menu.Add("comboUseR", new CheckBox("Use R", false));
+                    _useR = Menu.Add("comboUseR", new Slider("Use R", 3,0,5));
                 }
 
                 public static void Initialize()
@@ -131,24 +133,29 @@ namespace xRp_Lux
                 }
             }
 
-            public static class Misc
+           
+
+        }
+
+        public static class Misc
+        {
+            static Misc()
             {
-                public static int Az
-                {
-                    get { return Menu["AutoZhonia"].Cast<Slider>().CurrentValue; }
-                }
+                var miscMenu = Menu.AddSubMenu("Misc");
 
-                static Misc()
-                {
-                    Menu.Add("harassMana", new Slider("Min to Zhonias", 20));
-                }
+                miscMenu.AddGroupLabel("Combo");
+                AutoZhonia = Menu.Add("autozhonia", new Slider("Life [%] to Use Zhonias", 15));
+            }
 
+            private static readonly Slider AutoZhonia;
 
+            public static int _AZ
+            {
+                get { return AutoZhonia.CurrentValue; }
+            }
 
-                public static void Initialize()
-                {
-                }
-
+            public static void Initialize()
+            {
             }
         }
     }

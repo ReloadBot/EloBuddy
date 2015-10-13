@@ -1,6 +1,7 @@
 ﻿using EloBuddy;
 using EloBuddy.SDK;
-using Settings = xRp_Lux.Config.Modes.Misc;
+using xRP_Lux.Modes;
+using Settings = xRp_Lux.Config.Misc;
 
 namespace xRp_Lux.Modes
 {
@@ -14,11 +15,11 @@ namespace xRp_Lux.Modes
 
         public override void Execute()
         {
-            // TODO: Add permaactive logic here, good for spells like Ignite or Smite
+            var player = ObjectManager.Player;
 
-             Item zhonias = new Item((int)ItemId.Zhonyas_Hourglass, 0);
+             Item zhonias = new Item((int)ItemId.Zhonyas_Hourglass);
 
-            if (ObjectManager.Player.HealthPercent <= Settings.Az)
+            if (player.HealthPercent <= Settings._AZ)
                     
             {
                 zhonias.Cast();
