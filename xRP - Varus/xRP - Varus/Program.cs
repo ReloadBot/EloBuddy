@@ -6,7 +6,6 @@ using EloBuddy.SDK.Events;
 using EloBuddy.SDK.Menu;
 using EloBuddy.SDK.Menu.Values;
 using EloBuddy.SDK.Rendering;
-using xRP_Spells;
 using Color = System.Drawing.Color;
 
 namespace xRP___Varus
@@ -94,51 +93,72 @@ namespace xRP___Varus
 
             
                 var useq = ComboMenu["comboq"].Cast<CheckBox>().CurrentValue;
+                var usee = ComboMenu["comboe"].Cast<CheckBox>().CurrentValue;
+                
 
-                var enemy = TargetSelector.GetTarget(1625, DamageType.Physical);
-
-                if (!enemy.IsValid()) return;
-
-
-                if (Varus.Q.IsReady() && Varus.Q.IsInRange(enemy) && useq)
+            if (useq)
+            {
+                var target = TargetSelector.GetTarget(Varus.Q.MaximumRange - 50, DamageType.Physical);
                 {
-                    Varus.Q.Cast(enemy);
-                }
-
-                if (enemy.IsValid && Varus.E.IsReady() && Varus.E.IsInRange(enemy) &&
-                    ComboMenu["comboe"].Cast<CheckBox>().CurrentValue)
-                {
-                    Varus.E.Cast(enemy);
-                }
-
-                if (Varus.R.IsReady() && Varus.R.IsInRange(enemy) && enemy.IsValid)
-                    if (_Player.CountEnemiesInRange(_Player.GetAutoAttackRange()) >=
-                        ComboMenu["combor"].Cast<Slider>().CurrentValue)
+                    if (Varus.Q.IsInRange(target) && Varus.Q.IsReady())
                     {
-                        Varus.R.Cast(enemy);
+                        if (Varus.Q.IsCharging)
+                        {
+                            Varus.Q2.Cast(target);
+                        }
+                        else
+                        {
+                            Varus.Q.StartCharging();
+                        }
                     }
+                }
+            }
+
+            if (usee)
+            {
+                var target = TargetSelector.GetTarget(Varus.E.Radius, DamageType.Physical);
+                {
+                    if (target.IsValid && Varus.E.IsInRange(target))
+                    {
+                        Varus.E.Cast(target);
+                    }
+                }
+            }
 
 
 
                 // Items Usage
+            var menumura = ItemMenu["usemura"].Cast<CheckBox>().CurrentValue;
+            var menubotrk = ItemMenu["useer"].Cast<CheckBox>().CurrentValue;
+
 
                 Item manamune = new Item((int)ItemId.Manamune, 550);
                 Item botrk = new Item((int)ItemId.Blade_of_the_Ruined_King, 550);
 
-                if (ItemMenu["usemura"].Cast<CheckBox>().CurrentValue && manamune.IsReady() &&
-                    enemy.IsValidTarget(manamune.Range))
+
+                if (menumura && manamune.IsReady())
+            {
+                var enemy = TargetSelector.GetTarget(manamune.Range, DamageType.Physical);
+
+                if (enemy.IsValid && manamune.IsInRange(enemy))
                 {
                     manamune.Cast(enemy);
                 }
+            }
 
-                if (ItemMenu["useer"].Cast<CheckBox>().CurrentValue && botrk.IsReady() &&
-                    enemy.IsValidTarget(botrk.Range) &&
-                    _Player.Health + _Player.GetItemDamage(enemy, (ItemId)botrk.Id) < _Player.MaxHealth)
+
+            if (menubotrk && botrk.IsReady())
+                
+            {
+                var enemy = TargetSelector.GetTarget(botrk.Range, DamageType.Physical);
+                if (enemy.IsValidTarget(botrk.Range) &&
+                _Player.Health + _Player.GetItemDamage(enemy, (ItemId) botrk.Id) < _Player.MaxHealth)
                 {
                     botrk.Cast(enemy);
                 }
-
             }
+
+        }
         
 
 
