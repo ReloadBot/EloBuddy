@@ -12,7 +12,7 @@ namespace xRP___Varus
 {
     class Program
     {
-        public static AIHeroClient _Player
+        public static AIHeroClient Player
         {
             get { return ObjectManager.Player; }
 
@@ -27,9 +27,9 @@ namespace xRP___Varus
 
         public const string ChampName = "Varus";
 
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
-            if (Player.Instance.ChampionName != ChampName)
+            if (EloBuddy.Player.Instance.ChampionName != ChampName)
                 return;
 
             Loading.OnLoadingComplete += Game_OnStart;
@@ -46,27 +46,27 @@ namespace xRP___Varus
             Menu.AddSeparator();
 
             ComboMenu = Menu.AddSubMenu("Combo Menu", "xcombo");
-            ComboMenu.Add("comboq", new CheckBox("Use (Q) in Combo", true));
-            ComboMenu.Add("comboe", new CheckBox("Use (E) in Combo", true));
+            ComboMenu.Add("comboq", new CheckBox("Use (Q) in Combo"));
+            ComboMenu.Add("comboe", new CheckBox("Use (E) in Combo"));
             ComboMenu.Add("combor", new Slider  ("Min Enemy to (R)", 3, 0, 5 ));
 
             ItemMenu = Menu.AddSubMenu("Draw Menu", "xDraw");
-            ItemMenu.Add("usemana", new CheckBox("Use ManaMune in Combo", true));
-            ItemMenu.Add("useer", new CheckBox("Use  BOTRK in Combo", true));
+            ItemMenu.Add("usemana", new CheckBox("Use ManaMune in Combo"));
+            ItemMenu.Add("useer", new CheckBox("Use  BOTRK in Combo"));
 
 
 
             FarmMenu = Menu.AddSubMenu("Lane Menu", "xlane");
             FarmMenu.Add("farme", new Slider("Use (W) Farm Min Minions", 1,0,30));
-            FarmMenu.Add("farmq", new CheckBox("Use (Q) to Farm", true));
+            FarmMenu.Add("farmq", new CheckBox("Use (Q) to Farm"));
 
             HarasMenu = Menu.AddSubMenu("Haras Menu", "xharas");
-            HarasMenu.Add("hq", new CheckBox("Use (Q) to Harass", true));
+            HarasMenu.Add("hq", new CheckBox("Use (Q) to Harass"));
 
             DrawMenu = Menu.AddSubMenu("Draw Menu", "xDraw");
-            DrawMenu.Add("dq", new CheckBox("Draw (Q)", true));
-            DrawMenu.Add("de", new CheckBox("Draw (W)", true));
-            DrawMenu.Add("drawDisable", new CheckBox("Disable all Draws", true));
+            DrawMenu.Add("dq", new CheckBox("Draw (Q)"));
+            DrawMenu.Add("de", new CheckBox("Draw (W)"));
+            DrawMenu.Add("drawDisable", new CheckBox("Disable all Draws"));
 
         }
 
@@ -152,7 +152,7 @@ namespace xRP___Varus
             {
                 var enemy = TargetSelector.GetTarget(botrk.Range, DamageType.Physical);
                 if (enemy.IsValidTarget(botrk.Range) &&
-                _Player.Health + _Player.GetItemDamage(enemy, (ItemId) botrk.Id) < _Player.MaxHealth)
+                Player.Health + Player.GetItemDamage(enemy, (ItemId) botrk.Id) < Player.MaxHealth)
                 {
                     botrk.Cast(enemy);
                 }
@@ -164,12 +164,12 @@ namespace xRP___Varus
 
         private static void LaneClear()
         {
-            var minion = ObjectManager.Get<Obj_AI_Minion>().FirstOrDefault(a => a.IsEnemy && !a.IsDead && a.Distance(_Player) < _Player.AttackRange);
+            var minion = ObjectManager.Get<Obj_AI_Minion>().FirstOrDefault(a => a.IsEnemy && !a.IsDead && a.Distance(Player) < Player.AttackRange);
 
             if (minion == null)
                 return;
             if (Varus.E.IsReady() && Varus.E.IsInRange(minion))
-                if (minion.CountEnemiesInRange(_Player.GetAutoAttackRange()) >= ComboMenu["farme"].Cast<Slider>().CurrentValue)
+                if (minion.CountEnemiesInRange(Player.GetAutoAttackRange()) >= ComboMenu["farme"].Cast<Slider>().CurrentValue)
                 {
                     Varus.E.Cast(minion);
                 }
