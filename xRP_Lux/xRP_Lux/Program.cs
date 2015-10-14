@@ -57,7 +57,9 @@ namespace xRP_Lux
             ComboMenu.AddSeparator();
             ComboMenu.Add("usecomboq", new CheckBox("Use Q"));
             ComboMenu.Add("usecomboe", new CheckBox("Use E"));
-            ComboMenu.Add("usecombor", new CheckBox("Use R"));
+            ComboMenu.AddSeparator();
+            ComboMenu.Add("usecombow", new Slider("Min Health % to use W", 15));
+            ComboMenu.AddSeparator(); 
             ComboMenu.Add("useignite", new CheckBox("Use Ignite"));
             ComboMenu.AddSeparator();
             ComboMenu.Add("rkill", new CheckBox("R if Killable"));
@@ -66,15 +68,18 @@ namespace xRP_Lux
             MiscMenu.AddGroupLabel("Misc");
             MiscMenu.AddSeparator();
             MiscMenu.Add("kse", new CheckBox("KS with E"));
-            MiscMenu.Add("kse", new CheckBox("KS with R"));
+            MiscMenu.Add("ksr", new CheckBox("KS with R"));
+            MiscMenu.AddSeparator();
             MiscMenu.Add("WLowAllies", new CheckBox("Use W on % Hp Allies"));
             MiscMenu.Add("WHPPercent", new Slider("Ally HP %", 45));
+            MiscMenu.AddSeparator();
             MiscMenu.Add("gapq", new CheckBox("Q on Gapcloser"));
 
             PredMenu = LuxMenu.AddSubMenu("Prediction", "pred");
             PredMenu.AddGroupLabel("Prediction");
             PredMenu.AddSeparator();
             PredMenu.Add("predq", new CheckBox("Q Hit Chance [CHECK FOR MEDIUM | NO CHECK FOR HIGH]"));
+            PredMenu.AddSeparator();
             PredMenu.Add("prede", new CheckBox("E Hit Chance [ CHECK FOR MEDIUM | NO CHECK FOR HIGH]"));
 
 
@@ -243,6 +248,7 @@ namespace xRP_Lux
         private static void Combo ()
         {
             var useQ = ComboMenu["usecomboq"].Cast<CheckBox>().CurrentValue;
+            var useW = ComboMenu["usecombow"].Cast<Slider>().CurrentValue;
             var useE = ComboMenu["usecomboe"].Cast<CheckBox>().CurrentValue;
             var useR = ComboMenu["rkill"].Cast<CheckBox>().CurrentValue;
 
@@ -260,6 +266,11 @@ namespace xRP_Lux
                         }
                     }
                 }
+
+            if (W.IsReady() && Me.HealthPercent <= useW)
+            {
+                W.Cast();
+            }
 
             if (useE && E.IsReady())
             {
