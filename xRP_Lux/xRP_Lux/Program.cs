@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 using System.Linq;
 using EloBuddy;
 using EloBuddy.SDK;
@@ -7,6 +6,9 @@ using EloBuddy.SDK.Enumerations;
 using EloBuddy.SDK.Events;
 using EloBuddy.SDK.Menu;
 using EloBuddy.SDK.Menu.Values;
+using EloBuddy.SDK.Rendering;
+using SharpDX;
+using Color = System.Drawing.Color;
 
 namespace xRP_Lux
 {
@@ -87,6 +89,9 @@ namespace xRP_Lux
             DrawMenu.AddSeparator();
             DrawMenu.Add("drawq", new CheckBox("Draw Q"));
             DrawMenu.Add("drawe", new CheckBox("Draw E"));
+            DrawMenu.AddSeparator();
+            DrawMenu.Add("drawc", new CheckBox("Draw Combo Damage"));
+            DrawMenu.Add("disable", new CheckBox("Disable Draw Combo Damage"));
 
             LaneClearMenu = LuxMenu.AddSubMenu("Lane Clear", "laneclear");
             LaneClearMenu.AddGroupLabel("Lane Clear Settings");
@@ -94,7 +99,9 @@ namespace xRP_Lux
 
             Interrupter.OnInterruptableSpell += Interrupter_OnInterruptableSpell;
             Game.OnTick += Tick;
-            Drawing.OnDraw += OnDraw;
+            Drawing.OnDraw += OnDraw; 
+            Drawing.OnDraw += OnDamageDraw;
+            
             Gapcloser.OnGapcloser += Gapcloser_OnGapCloser;
         }
 
@@ -157,6 +164,38 @@ namespace xRP_Lux
                    
                 }
             }
+
+        }
+
+        // Combo Draw Damage
+        public static void OnDamageDraw(EventArgs args)
+        {
+            var killableText = new Text("",
+            new System.Drawing.Font(System.Drawing.FontFamily.GenericSansSerif, 9, System.Drawing.FontStyle.Bold));
+            var disable = DrawMenu["disable"].Cast<CheckBox>().CurrentValue;
+            var drawDamage = DrawMenu["drawc"].Cast<CheckBox>().CurrentValue;
+            if (disable) return;
+
+            if (drawDamage)
+            {
+                foreach (var ai in EntityManager.Heroes.Enemies)
+                {
+                    if (ai.IsValidTarget())
+                    {
+                        var drawn = 0;
+                        if (ComboDamage(ai) >= ai.Health && drawn == 0)
+                        {
+                            killableText.Position = Drawing.WorldToScreen(ai.Position) - new Vector2(40, -40);
+                            killableText.Color = Color.Red;
+                            killableText.TextValue = "FULL COMBO TO KILL";
+                            killableText.Draw();
+                            
+                        }
+
+                    }}
+            }
+
+
 
         }
 
@@ -303,6 +342,31 @@ namespace xRP_Lux
 
             }
 
+        }
+
+
+        // Calculate Combo Damage
+        public static float ComboDamage(Obj_AI_Base target)
+        {
+            var damage = 0d;
+
+            if (Q.IsReady(3))
+            {
+                damage += Me.GetSpellDamage(target, SpellSlot.Q);
+            }
+
+            if (E.IsReady(2))
+            {
+                damage += Me.GetSpellDamage(target, SpellSlot.E);
+            }
+
+            if (R.IsReady(5))
+            {
+                damage += Me.GetSpellDamage(target, SpellSlot.R);
+            }
+
+            damage += Me.GetAutoAttackDamage(target) * 3;
+            return (float)damage;
         }
 
 
