@@ -1,44 +1,15 @@
 ﻿using System;
-using EloBuddy;
-using EloBuddy.SDK.Events;
-using EloBuddy.SDK.Rendering;
-using SharpDX;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace xRp_Lux
+namespace xRP_Lux
 {
-    public static class Program
+    class Program
     {
-
-        public const string ChampName = "Lux";
-
-        public static void Main(string[] args)
+        static void Main(string[] args)
         {
-
-            Loading.OnLoadingComplete += OnLoadingComplete;
-        }
-
-        private static void OnLoadingComplete(EventArgs args)
-        {
-
-            if (Player.Instance.ChampionName != ChampName)
-            {
-
-                return;
-            }
-
-
-            Config.Initialize();
-            SpellManager.Initialize();
-            ModeManager.Initialize();
-
-
-            Drawing.OnDraw += OnDraw;
-        }
-
-        private static void OnDraw(EventArgs args)
-        {
-
-            Circle.Draw(Color.Red, SpellManager.Q.Range, Player.Instance.Position);
         }
     }
 }
