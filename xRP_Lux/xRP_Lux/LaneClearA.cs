@@ -12,7 +12,7 @@ namespace xRP_Lux
             E
         };
 
-        public static AIHeroClient Morgana
+        public static AIHeroClient Lux
         {
             get { return ObjectManager.Player; }
         }
@@ -32,16 +32,16 @@ namespace xRP_Lux
         public static void LaneClear()
         {
             var echeck = Program.LaneClearMenu["LCE"].Cast<CheckBox>().CurrentValue;
-            var eready = Program.W.IsReady();
+            var eready = Program.E.IsReady();
 
             if (echeck && eready)
             {
-                var wenemy =
-                    (Obj_AI_Minion)GetEnemy(Program.W.Range, GameObjectType.obj_AI_Minion);
+                var eenemy =
+                    (Obj_AI_Minion)GetEnemy(Program.E.Range, GameObjectType.obj_AI_Minion);
 
-                if (wenemy != null)
+                if (eenemy != null)
                 {
-                    Program.E.Cast(wenemy.ServerPosition);
+                    Program.E.Cast(eenemy.ServerPosition);
                 }
             }
         }
