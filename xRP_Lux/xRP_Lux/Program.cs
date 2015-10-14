@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Drawing;
 using System.Linq;
 using EloBuddy;
@@ -17,7 +16,7 @@ namespace xRP_Lux
         public static Spell.Skillshot Q, E, R;
         public static Spell.Active W;
         public static Spell.Targeted Ignite;
-        public static Menu LuxMenu, DrawMenu, ComboMenu, LaneClear, MiscMenu, PredMenu;
+        public static Menu LuxMenu, DrawMenu, ComboMenu, LaneClearMenu, MiscMenu, PredMenu;
         public static AIHeroClient Me = ObjectManager.Player;
         public static HitChance QHitChance;
         public static HitChance EHitChance;
@@ -41,7 +40,7 @@ namespace xRP_Lux
 
             Q = new Spell.Skillshot(SpellSlot.Q, 1175, SkillShotType.Linear);
             W = new Spell.Active(SpellSlot.W, 1075);
-            E = new Spell.Skillshot(SpellSlot.E, 1200, SkillShotType.Linear);
+            E = new Spell.Skillshot(SpellSlot.E, 1200, SkillShotType.Circular);
             R = new Spell.Skillshot(SpellSlot.R, 3300, SkillShotType.Linear);
 
             if (HasSpell("summonerdot"))
@@ -59,7 +58,7 @@ namespace xRP_Lux
             ComboMenu.Add("usecomboe", new CheckBox("Use E"));
             ComboMenu.AddSeparator();
             ComboMenu.Add("usecombow", new Slider("Min Health % to use W", 15));
-            ComboMenu.AddSeparator(); 
+            ComboMenu.AddSeparator();
             ComboMenu.Add("useignite", new CheckBox("Use Ignite"));
             ComboMenu.AddSeparator();
             ComboMenu.Add("rkill", new CheckBox("R if Killable"));
@@ -89,9 +88,9 @@ namespace xRP_Lux
             DrawMenu.Add("drawq", new CheckBox("Draw Q"));
             DrawMenu.Add("drawe", new CheckBox("Draw E"));
 
-            LaneClear = LuxMenu.AddSubMenu("Lane Clear", "laneclear");
-            LaneClear.AddGroupLabel("Lane Clear Settings");
-            LaneClear.Add("LCE", new CheckBox("Use E"));
+            LaneClearMenu = LuxMenu.AddSubMenu("Lane Clear", "laneclear");
+            LaneClearMenu.AddGroupLabel("Lane Clear Settings");
+            LaneClearMenu.Add("LCE", new CheckBox("Use E"));
 
             Interrupter.OnInterruptableSpell += Interrupter_OnInterruptableSpell;
             Game.OnTick += Tick;
@@ -152,6 +151,11 @@ namespace xRP_Lux
                 {
                     Drawing.DrawCircle(Me.Position, W.Range, Color.OrangeRed);
                 }
+
+                if (DrawMenu["hpdraw"].Cast<CheckBox>().CurrentValue)
+                {
+                   
+                }
             }
 
         }
@@ -161,7 +165,7 @@ namespace xRP_Lux
             QHitChance = PredMenu["predq"].Cast<CheckBox>().CurrentValue ? HitChance.Medium : HitChance.High;
             EHitChance = PredMenu["prede"].Cast<CheckBox>().CurrentValue ? HitChance.Medium : HitChance.High;
             Killsteal();
-             // AutoCast();
+            // AutoCast();
 
             {
                 if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo))
@@ -171,7 +175,7 @@ namespace xRP_Lux
             if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.LaneClear) ||
                 Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.JungleClear))
             {
-                //LaneClearA.LaneClear();
+                LaneClearA.LaneClear();
             }
 
             //Auto Ignite
@@ -185,7 +189,7 @@ namespace xRP_Lux
                             .Where(
                                 a =>
                                     a.IsEnemy && a.IsValidTarget(Ignite.Range) &&
-                                    a.Health < 50 + 20 * Me.Level - (a.HPRegenRate / 5 * 3)))
+                                    a.Health < 50 + 20*Me.Level - (a.HPRegenRate/5*3)))
                 {
                     Ignite.Cast(source);
                     return;
@@ -245,7 +249,7 @@ namespace xRP_Lux
             }
         }
 
-        private static void Combo ()
+        private static void Combo()
         {
             var useQ = ComboMenu["usecomboq"].Cast<CheckBox>().CurrentValue;
             var useW = ComboMenu["usecombow"].Cast<Slider>().CurrentValue;
@@ -260,12 +264,12 @@ namespace xRP_Lux
                 {
                     if (Q.GetPrediction(target).HitChance >= QHitChance)
                     {
-                       
-                            Q.Cast(target);
 
-                        }
+                        Q.Cast(target);
+
                     }
                 }
+            }
 
             if (W.IsReady() && Me.HealthPercent <= useW)
             {
@@ -298,12 +302,11 @@ namespace xRP_Lux
                 }
 
             }
-            }
-
-
-
-
 
         }
 
+
+
+
     }
+}
