@@ -77,6 +77,7 @@ namespace xRP_Lux
             MiscMenu.Add("WHPPercent", new Slider("Ally HP %", 45));
             MiscMenu.AddSeparator();
             MiscMenu.Add("gapq", new CheckBox("Q on Gapcloser"));
+            MiscMenu.AddSeparator();
             MiscMenu.Add("zhonias", new CheckBox("Auto Zhonias"));
             MiscMenu.Add("ZPercent", new Slider("Zhonias HP %", 20));
 
