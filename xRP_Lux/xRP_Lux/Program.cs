@@ -290,7 +290,7 @@ namespace xRP_Lux
                     {
                         if (Me.GetSpellDamage(rtarget, SpellSlot.R) >= rtarget.Health)
                         {
-                            var poutput = E.GetPrediction(rtarget);
+                            var poutput = R.GetPrediction(rtarget);
                             if (poutput.HitChance >= HitChance.Medium)
                             {
                                 R.Cast(poutput.CastPosition);
