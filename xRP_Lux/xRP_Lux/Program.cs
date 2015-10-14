@@ -45,9 +45,11 @@ namespace xRP_Lux
             E = new Spell.Skillshot(SpellSlot.E, 1200, SkillShotType.Circular);
             R = new Spell.Skillshot(SpellSlot.R, 3300, SkillShotType.Linear);
 
+            // Ignite Spell
             if (HasSpell("summonerdot"))
                 Ignite = new Spell.Targeted(ObjectManager.Player.GetSpellSlotFromName("summonerdot"), 600);
 
+            // Menu Settings
             LuxMenu = MainMenu.AddMenu("xRP Lux", "xrplux");
             LuxMenu.AddGroupLabel("xRP-Lux");
             LuxMenu.AddSeparator();
@@ -97,6 +99,7 @@ namespace xRP_Lux
             LaneClearMenu.AddGroupLabel("Lane Clear Settings");
             LaneClearMenu.Add("LCE", new CheckBox("Use E"));
 
+
             Interrupter.OnInterruptableSpell += Interrupter_OnInterruptableSpell;
             Game.OnTick += Tick;
             Drawing.OnDraw += OnDraw; 
@@ -129,7 +132,7 @@ namespace xRP_Lux
                         .FirstOrDefault(x => x.IsValidTarget(W.Range) && x.HealthPercent < shieldHealthPercent);
                 if (ally != null && ally.CountEnemiesInRange(650) >= 1)
                 {
-                    W.Cast(ally);
+                    W.Cast(ally.Position);
                 }
             }
         }
