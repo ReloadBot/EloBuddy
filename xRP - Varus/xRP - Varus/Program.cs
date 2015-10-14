@@ -99,12 +99,13 @@ namespace xRP___Varus
             if (useq)
             {
                 var target = TargetSelector.GetTarget(Varus.Q.MaximumRange - 50, DamageType.Physical);
+                var predq = Varus.Q.GetPrediction(target);
                 {
                     if (Varus.Q.IsInRange(target) && Varus.Q.IsReady())
                     {
                         if (Varus.Q.IsCharging)
                         {
-                            Varus.Q2.Cast(target);
+                            Varus.Q2.Cast(predq.CastPosition);
                         }
                         else
                         {
@@ -119,6 +120,7 @@ namespace xRP___Varus
                 var target = TargetSelector.GetTarget(Varus.E.Radius, DamageType.Physical);
                 {
                     if (target.IsValid && Varus.E.IsInRange(target))
+                       
                     {
                         Varus.E.Cast(target);
                     }
