@@ -109,6 +109,8 @@ namespace xRP_Lux
             Drawing.OnDraw += OnDamageDraw;
             
             Gapcloser.OnGapcloser += Gapcloser_OnGapCloser;
+
+            Chat.Print( "xRP-Lux full LOADED \n Have Fun");
         }
 
         //Interrupt
@@ -165,10 +167,6 @@ namespace xRP_Lux
                     Drawing.DrawCircle(Me.Position, W.Range, Color.OrangeRed);
                 }
 
-                if (DrawMenu["hpdraw"].Cast<CheckBox>().CurrentValue)
-                {
-                   
-                }
             }
 
         }
