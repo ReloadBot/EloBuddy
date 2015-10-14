@@ -129,7 +129,7 @@ namespace xRP_Lux
                         .FirstOrDefault(x => x.IsValidTarget(W.Range) && x.HealthPercent < shieldHealthPercent);
                 if (ally != null && ally.CountEnemiesInRange(650) >= 1)
                 {
-                    E.Cast(ally);
+                    W.Cast(ally);
                 }
             }
         }
