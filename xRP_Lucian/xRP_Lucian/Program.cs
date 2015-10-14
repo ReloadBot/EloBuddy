@@ -24,7 +24,13 @@ namespace xRP_Lucian
 
         private static void Game_OnStart(EventArgs args)
         {
-            Chat.Print("xRP_Lucian LOADED \n 1.0.0v \n HaveFun");          
+
+            Chat.Print("xRP_Lucian LOADED \n 1.0.0v \n HaveFun");       
+   
+            // instance initialize
+            Lucian.Initialize();
+            config.Initialize();
+
         }
 
         private static void Game_OnTick(EventArgs args)

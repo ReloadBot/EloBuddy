@@ -19,5 +19,10 @@ namespace xRP_Lucian
             R = new Spell.Skillshot(SpellSlot.R, 1400, SkillShotType.Linear);
         }
 
+        public static void Initialize()
+        {
+        }
     }
+
+    
 }

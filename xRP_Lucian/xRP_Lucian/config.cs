@@ -28,6 +28,12 @@ namespace xRP_Lucian
            DrawMenu.Add("draww", new CheckBox("Draw(W)", true));
            DrawMenu.Add("drawe", new CheckBox("Draw(E)", true));
 
+
+
+       }
+
+       public static void Initialize()
+       {
        }
 
 
