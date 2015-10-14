@@ -15,10 +15,10 @@ namespace xRP_Lux
     internal class Program
     {
 
-        public static Spell.Skillshot Q, E, R;
-        public static Spell.Active W;
+        public static Spell.Skillshot Q, W, E, R;
+        
         public static Spell.Targeted Ignite;
-        public static Menu LuxMenu, DrawMenu, ComboMenu, LaneClearMenu, MiscMenu, PredMenu;
+        public static Menu LuxMenu, DrawMenu, ComboMenu, HarassMenu, LaneClearMenu, MiscMenu, PredMenu;
         public static AIHeroClient Me = ObjectManager.Player;
         public static HitChance QHitChance;
         public static HitChance EHitChance;
@@ -41,7 +41,7 @@ namespace xRP_Lux
             Bootstrap.Init(null);
 
             Q = new Spell.Skillshot(SpellSlot.Q, 1175, SkillShotType.Linear);
-            W = new Spell.Active(SpellSlot.W, 1075);
+            W = new Spell.Skillshot(SpellSlot.W, 1075, SkillShotType.Linear);
             E = new Spell.Skillshot(SpellSlot.E, 1200, SkillShotType.Circular);
             R = new Spell.Skillshot(SpellSlot.R, 3300, SkillShotType.Linear);
 
@@ -66,6 +66,11 @@ namespace xRP_Lux
             ComboMenu.Add("useignite", new CheckBox("Use Ignite"));
             ComboMenu.AddSeparator();
             ComboMenu.Add("rkill", new CheckBox("R if Killable"));
+
+            HarassMenu = LuxMenu.AddSubMenu("HarassMenu", "Harass");
+            HarassMenu.Add("useQHarass", new CheckBox("Use Q"));
+            HarassMenu.Add("useEHarass", new CheckBox("Use E"));
+            HarassMenu.Add("waitAA", new CheckBox("wait for AA to finish", false));
 
             MiscMenu = LuxMenu.AddSubMenu("Misc", "misc");
             MiscMenu.AddGroupLabel("Misc");
@@ -109,8 +114,7 @@ namespace xRP_Lux
             Drawing.OnDraw += OnDamageDraw;
             
             Gapcloser.OnGapcloser += Gapcloser_OnGapCloser;
-
-            Chat.Print( "xRP-Lux full LOADED \n Have Fun");
+          
         }
 
         //Interrupt
@@ -219,6 +223,11 @@ namespace xRP_Lux
                 Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.JungleClear))
             {
                 LaneClearA.LaneClear();
+            }
+
+            if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Harass))
+            {
+                Harass();
             }
 
             //Auto Ignite
@@ -359,6 +368,32 @@ namespace xRP_Lux
 
             }
 
+        }
+
+        public static void Harass()
+        {
+            var target = TargetSelector.GetTarget(800, DamageType.Magical);
+            Orbwalker.OrbwalkTo(Game.CursorPos);
+            if (Orbwalker.IsAutoAttacking && HarassMenu["waitAA"].Cast<CheckBox>().CurrentValue)
+                return;
+            if (HarassMenu["useQHarass"].Cast<CheckBox>().CurrentValue && Q.IsReady())
+            {
+                if (target.Distance(Me) <= Q.Range )
+                {
+                    var predQ = Q.GetPrediction(target).CastPosition;
+                    Q.Cast(predQ);
+                    return;
+                }
+            }
+
+            if (HarassMenu["useEHarass"].Cast<CheckBox>().CurrentValue && E.IsReady())
+            {
+                if (target.Distance(Me) <= E.Range)
+                {
+                    var predE = E.GetPrediction(target).CastPosition;
+                    E.Cast(predE);
+                }
+            }
         }
 
 
