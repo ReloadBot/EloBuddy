@@ -23,7 +23,7 @@ namespace xRP_Lux
         public static HitChance EHitChance;
 
 
-        private static void Main(string[] args)
+        public static void Main(string[] args)
         {
             Loading.OnLoadingComplete += OnLoaded;
         }
@@ -106,7 +106,7 @@ namespace xRP_Lux
         }
 
         //AutoW Life
-        private static void AutoW()
+        public static void AutoW()
         {
             var shieldAllies = MiscMenu["WLowAllies"].Cast<CheckBox>().CurrentValue;
             var shieldHealthPercent = MiscMenu["WHPPercent"].Cast<Slider>().CurrentValue;
@@ -156,6 +156,7 @@ namespace xRP_Lux
             QHitChance = PredMenu["predq"].Cast<CheckBox>().CurrentValue ? HitChance.Medium : HitChance.High;
             EHitChance = PredMenu["prede"].Cast<CheckBox>().CurrentValue ? HitChance.Medium : HitChance.High;
             Killsteal();
+             // AutoCast();
 
             {
                 if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo))
@@ -168,6 +169,7 @@ namespace xRP_Lux
                 //LaneClearA.LaneClear();
             }
 
+            //Auto Ignite
             {
                 if (!ComboMenu["useignite"].Cast<CheckBox>().CurrentValue ||
                     !Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo))
@@ -212,9 +214,8 @@ namespace xRP_Lux
                 }
                 catch
                 {
+                    // ignored
                 }
-
-
             }
             if (MiscMenu["ksr"].Cast<CheckBox>().CurrentValue && R.IsReady())
             {
@@ -234,9 +235,8 @@ namespace xRP_Lux
                 }
                 catch
                 {
-
+                    // ignored
                 }
-                
             }
         }
 
@@ -249,13 +249,13 @@ namespace xRP_Lux
 
             if (useQ && Q.IsReady())
             {
-                var Target = TargetSelector.GetTarget(Q.Range, DamageType.Magical);
-                if (Target.IsValidTarget(Q.Range))
+                var target = TargetSelector.GetTarget(Q.Range, DamageType.Magical);
+                if (target.IsValidTarget(Q.Range))
                 {
-                    if (Q.GetPrediction(Target).HitChance >= QHitChance)
+                    if (Q.GetPrediction(target).HitChance >= QHitChance)
                     {
                        
-                            Q.Cast(Target);
+                            Q.Cast(target);
 
                         }
                     }
@@ -263,12 +263,12 @@ namespace xRP_Lux
 
             if (useE && E.IsReady())
             {
-                var Target = TargetSelector.GetTarget(E.Range, DamageType.Magical);
-                if (Target.IsValidTarget(E.Range))
+                var target = TargetSelector.GetTarget(E.Range, DamageType.Magical);
+                if (target.IsValidTarget(E.Range))
                 {
-                    if (E.GetPrediction(Target).HitChance >= EHitChance)
+                    if (E.GetPrediction(target).HitChance >= EHitChance)
                     {
-                        E.Cast(Target);
+                        E.Cast(target);
 
                     }
                 }
@@ -276,12 +276,12 @@ namespace xRP_Lux
 
             if (useR && R.IsReady())
             {
-                var Target = TargetSelector.GetTarget(R.Range, DamageType.Magical);
-                if (Target.IsValidTarget(R.Range))
+                var target = TargetSelector.GetTarget(R.Range, DamageType.Magical);
+                if (target.IsValidTarget(R.Range))
                 {
-                    if (Me.GetSpellDamage(Target, SpellSlot.R) >= Target.Health)
+                    if (Me.GetSpellDamage(target, SpellSlot.R) >= target.Health)
                     {
-                        R.Cast(Target);
+                        R.Cast(target);
 
                     }
                 }
