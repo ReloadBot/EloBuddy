@@ -11,11 +11,12 @@ namespace xRP_Lucian
 {
     class Program
     {
-        public static AIHeroClient _player {get { return ObjectManager.Player; }}
+        public static AIHeroClient Player {get { return ObjectManager.Player; }}
         
         static void Main(string[] args)        
        {
-            if (Player.Instance.ChampionName != "Lucian") return;
+            if (args == null) throw new ArgumentNullException("args");
+            if (EloBuddy.Player.Instance.ChampionName != "Lucian") return;
             Loading.OnLoadingComplete += Game_OnStart;
             Game.OnTick += Game_OnTick;
             Drawing.OnDraw += OnDraw;
@@ -28,9 +29,12 @@ namespace xRP_Lucian
 
         private static void Game_OnTick(EventArgs args)
         {
-            if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo)) {Combo();}
-            if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.LaneClear)) { LaneClear(); }
-            if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Harass)) { Harass(); }
+            if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo))
+                Combo();
+            if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.LaneClear))
+                LaneClear();
+            if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Harass))
+                Harass();
         }
 
         public static void Combo()
@@ -40,23 +44,41 @@ namespace xRP_Lucian
             var usee = config.ComboMenu["comboe"].Cast<CheckBox>().CurrentValue;
           
 
-            var enemy = TargetSelector.GetTarget(1400, DamageType.Physical);
-            if (!enemy.IsValid) return;
 
-            if (_player.GetBuff("Lightslinger").IsActive) return;
-            if (enemy.IsValid && Lucian.Q.IsReady() && enemy.IsValid && Lucian.Q.IsInRange(enemy) && useq)
+            
+            if (Lucian.Q.IsReady()&& useq)
             {
-                Lucian.Q.Cast(enemy);
+                var enemy = TargetSelector.GetTarget(Lucian.Q.Range, DamageType.Physical);
+
+                if (Player.HasBuff("Lightslinger")) return;
+                if (enemy.IsValidTarget() && Lucian.Q.IsInRange(enemy))
+                {
+             Lucian.Q.Cast(enemy);
+                }
             }
 
-            if (enemy.IsValid && Lucian.W.IsReady() && enemy.IsValid && Lucian.W.IsInRange(enemy) && usew)
+            if (Lucian.W.IsReady() && usew)
+
             {
-                Lucian.W.Cast(enemy.Position);
+                var enemy = TargetSelector.GetTarget(Lucian.W.Range, DamageType.Physical);
+
+                if (Player.HasBuff("Lightslinger")) return;
+                if (enemy.IsValidTarget(Lucian.W.Range))
+                {
+                    Lucian.W.Cast(enemy.Position);
+                }
             }
 
-            if (enemy.IsValid && Lucian.E.IsReady() && enemy.IsValid && usee)
+
+            if (Lucian.E.IsReady() && usee)
             {
-                Lucian.E.Cast(Game.CursorPos);
+
+                var enemy = TargetSelector.GetTarget(Lucian.E.Range, DamageType.Physical);
+
+                if (enemy.IsValidTarget(Lucian.E.Range))
+                {
+                    Lucian.E.Cast(Game.CursorPos);
+                }
             }
     }
 
@@ -67,26 +89,29 @@ namespace xRP_Lucian
             var farme = config.ComboMenu["farme"].Cast<CheckBox>().CurrentValue;
 
            var minions = ObjectManager.Get<Obj_AI_Minion>().OrderBy(m => m.Health).Where(m => m.IsEnemy);
-           
-            if (_player.GetBuff("Lightslinger").IsActive) return;
-            if (minions == null)return;
 
 
-            foreach (var minion in minions)
+
+            var objAiMinions = minions as Obj_AI_Minion[] ?? minions.ToArray();
+            foreach (var minion in objAiMinions)
             if (Lucian.Q.IsReady() && Lucian.Q.IsInRange(minion) && farmq )
+
             {
+                if (Player.HasBuff("Lightslinger")) return;
                 Lucian.Q.Cast(minion);
             }
 
-            foreach (var minion in minions)
+            foreach (var minion in objAiMinions)
             if (Lucian.W.IsReady() && Lucian.W.IsInRange(minion) && farmw)
             {
+                if (Player.HasBuff("Lightslinger")) return;
                 Lucian.W.Cast(minion);
             }
 
-            foreach (var minion in minions)
+            foreach (var minion in objAiMinions)
                 if (Lucian.E.IsReady() && farme && Lucian.E.IsInRange(minion))
                 {
+                    if (Player.HasBuff("Lightslinger")) return;
                     Lucian.E.Cast(Game.CursorPos);
 
                 }
