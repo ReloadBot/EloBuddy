@@ -333,7 +333,7 @@ namespace xRP_Lux
                 var target = TargetSelector.GetTarget(R.Range, DamageType.Magical);
                 if (target.IsValidTarget(R.Range))
                 {
-                    if (Me.GetSpellDamage(target, SpellSlot.R) >= target.Health)
+                    if (Me.GetSpellDamage(target, SpellSlot.R) > target.Health)
                     {
                         R.Cast(target);
 
