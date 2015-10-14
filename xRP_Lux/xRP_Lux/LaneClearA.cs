@@ -9,7 +9,7 @@ namespace xRP_Lux
     {
         public enum AttackSpell
         {
-            W
+            E
         };
 
         public static AIHeroClient Morgana
