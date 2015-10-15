@@ -10,7 +10,7 @@ namespace xRP_Caitlyn
     {
         public enum AttackSpell
         {
-            E
+            Q
         };
 
         public static AIHeroClient Caitlyn
