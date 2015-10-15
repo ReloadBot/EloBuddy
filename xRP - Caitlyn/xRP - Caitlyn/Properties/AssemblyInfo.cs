@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("xRP Braum")]
+[assembly: AssemblyTitle("xRP - Caitlyn")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Microsoft")]
-[assembly: AssemblyProduct("xRP Braum")]
+[assembly: AssemblyProduct("xRP - Caitlyn")]
 [assembly: AssemblyCopyright("Copyright © Microsoft 2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("0853a6ab-ac23-4238-bdda-010f518afc35")]
+[assembly: Guid("d5bc61bc-33e9-4e5f-9250-3ac2eba693c0")]
 
 // Version information for an assembly consists of the following four values:
 //
