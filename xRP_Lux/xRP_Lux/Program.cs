@@ -325,12 +325,15 @@ namespace xRP_Lux
             if (useQ && Q.IsReady())
             {
                 var target = TargetSelector.GetTarget(Q.Range, DamageType.Magical);
+                var predq = Q.GetPrediction(target).CastPosition;
+                
+
                 if (target.IsValidTarget(Q.Range))
                 {
                     if (Q.GetPrediction(target).HitChance >= QHitChance)
                     {
-
-                        Q.Cast(target);
+                       
+                        Q.Cast(predq);
 
                     }
                 }
@@ -344,11 +347,12 @@ namespace xRP_Lux
             if (useE && E.IsReady())
             {
                 var target = TargetSelector.GetTarget(E.Range, DamageType.Magical);
+                var prede = E.GetPrediction(target).CastPosition;
                 if (target.IsValidTarget(E.Range))
                 {
                     if (E.GetPrediction(target).HitChance >= EHitChance)
                     {
-                        E.Cast(target);
+                        E.Cast(prede);
 
                     }
                 }
