@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Linq;
+using System.Runtime.InteropServices;
 using EloBuddy;
 using EloBuddy.SDK;
 using EloBuddy.SDK.Enumerations;
 using EloBuddy.SDK.Events;
 using EloBuddy.SDK.Menu;
 using EloBuddy.SDK.Menu.Values;
-using SharpDX;
 using Color = System.Drawing.Color;
 
 namespace xRP_Caitlyn
@@ -58,6 +58,8 @@ namespace xRP_Caitlyn
             HarassMenu.AddGroupLabel("Harasss Settings");
             HarassMenu.Add("useQharass", new CheckBox("Use Q Harass"));            
             HarassMenu.Add("useEharasss", new CheckBox("Use E Harass"));
+            HarassMenu.Add("useQcc", new CheckBox("Use Q Enemy CC"));
+
             HarassMenu.Add("waitAA", new CheckBox("wait for AA to finish", false));
 
             FarmMenu = CaitMenu.AddSubMenu("Farm", "sbtwfarm");
@@ -68,6 +70,7 @@ namespace xRP_Caitlyn
             ItemMenu.AddGroupLabel("Itens Settings");
             ItemMenu.Add("useER", new CheckBox("Use Botrk"));
             ItemMenu.Add("ERhealth", new Slider("Min Health % enemy to Botrk", 20));
+            ItemMenu.Add("UseYommus", new CheckBox("Use Yommus"));
             ItemMenu.AddSeparator();
 
             MiscMenu = CaitMenu.AddSubMenu("Misc", "sbtwmisc");
@@ -150,6 +153,7 @@ namespace xRP_Caitlyn
         private static void Tick(EventArgs args)
         {
             Killsteal();
+            Itens();
 
             {
                 if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo))
@@ -279,6 +283,43 @@ namespace xRP_Caitlyn
                     E.Cast(predE);
                 }
             }
+
+            if (target.IsTaunted && target.IsCharmed && target.IsRecalling() && target.IsValidTarget())
+            {
+                if (HarassMenu["useQcc"].Cast<CheckBox>().CurrentValue)
+                {
+                    Q.Cast(target);
+                }
+            }
+        }
+
+        private static void Itens()
+        {
+            var target = TargetSelector.GetTarget(500, DamageType.Physical);
+
+            var botrk = new Item((int)ItemId.Blade_of_the_Ruined_King, 600f);
+            var yommus = new Item((int)ItemId.Youmuus_Ghostblade);
+
+            var useER = ComboMenu["useER"].Cast<CheckBox>().CurrentValue;
+            var ERHealth = ComboMenu["ERHealth"].Cast<Slider>().CurrentValue;
+            var UseYommus = ComboMenu["UseYommus"].Cast<CheckBox>().CurrentValue;
+
+            if (botrk.IsReady())
+            {
+                if (useER && target.HealthPercent <= ERHealth)
+                {
+                    botrk.Cast(target);
+                }
+            }
+
+            if (yommus.IsReady() && UseYommus)
+            {
+                yommus.Cast();
+
+            }
+
+
+
         }
 
     }

@@ -163,8 +163,10 @@ namespace xRP_Tristana
                     var enemy = TargetSelector.GetTarget(R.Range, DamageType.Physical);
 
                     if (enemy.IsValidTarget(R.Range) && !enemy.IsDead && !enemy.IsZombie && enemy.Health <= Player.Instance.GetSpellDamage(enemy, SpellSlot.R))
-
-                    R.Cast(enemy);
+                        if (_Player.GetSpellDamage(enemy, SpellSlot.R) >= enemy.Health)
+                        {
+                            R.Cast(enemy);
+                        }
                 }
             }
 
