@@ -31,6 +31,7 @@ namespace xRP_Caitlyn
         {
             //Check Champ Name
             if (Player.Instance.ChampionName != "Caitlyn")
+return;
 
                 //Spell Instance
                 Q = new Spell.Skillshot(SpellSlot.Q, 1250, SkillShotType.Linear, 1, null, (int)90f);
@@ -73,7 +74,7 @@ namespace xRP_Caitlyn
             MiscMenu = CaitMenu.AddSubMenu("Misc", "sbtwmisc");
             MiscMenu.AddGroupLabel("Misc Settings");
             MiscMenu.Add("ksR", new CheckBox("R Killsteal"));
-            MiscMenu.Add("intQ", new CheckBox("Interrupt with Q"));
+            MiscMenu.Add("intW", new CheckBox("Interrupt with W"));
             MiscMenu.Add("Egap", new CheckBox("E on Gapcloser"));
 
             DrawMenu = CaitMenu.AddSubMenu("Draw", "sbtwdraw");
@@ -97,10 +98,10 @@ namespace xRP_Caitlyn
         private static void Interrupter_OnInterruptableSpell(Obj_AI_Base sender,
             Interrupter.InterruptableSpellEventArgs args)
         {
-            var intTarget = TargetSelector.GetTarget(Q.Range, DamageType.Physical);
+            var intTarget = TargetSelector.GetTarget(W.Range, DamageType.Physical);
             {
-                if (Q.IsReady() && sender.IsValidTarget(Q.Range) && MiscMenu["intQ"].Cast<CheckBox>().CurrentValue)
-                    Q.Cast(intTarget.ServerPosition);
+                if (W.IsReady() && sender.IsValidTarget(W.Range) && MiscMenu["intW"].Cast<CheckBox>().CurrentValue)
+                    W.Cast(intTarget.ServerPosition);
             }
         }
 
@@ -223,7 +224,7 @@ namespace xRP_Caitlyn
 
                 if (target.IsValidTarget(W.Range))
                 {
-                    Q.Cast(predw - 10f);
+                    W.Cast(predw - 10f);
 
                 }
 
@@ -257,7 +258,7 @@ namespace xRP_Caitlyn
 
         public static void Harass()
         {
-            var target = TargetSelector.GetTarget(800, DamageType.Magical);
+            var target = TargetSelector.GetTarget(800, DamageType.Physical);
             Orbwalker.OrbwalkTo(Game.CursorPos);
             if (Orbwalker.IsAutoAttacking && HarassMenu["waitAA"].Cast<CheckBox>().CurrentValue)
                 return;
