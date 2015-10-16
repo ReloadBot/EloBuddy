@@ -103,8 +103,9 @@ return;
         {
             var intTarget = TargetSelector.GetTarget(W.Range, DamageType.Physical);
             {
-                if (W.IsReady() && sender.IsValidTarget(W.Range) && MiscMenu["intW"].Cast<CheckBox>().CurrentValue)
+                if (W.IsReady() && sender.IsValidTarget(W.Range) && MiscMenu["intW"].Cast<CheckBox>().CurrentValue && intTarget.IsRecalling)
                     W.Cast(intTarget.ServerPosition);
+                
             }
         }
 
