@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Runtime.InteropServices;
 using EloBuddy;
 using EloBuddy.SDK;
 using EloBuddy.SDK.Enumerations;
@@ -302,19 +301,19 @@ return;
             var botrk = new Item((int)ItemId.Blade_of_the_Ruined_King, 600f);
             var yommus = new Item((int)ItemId.Youmuus_Ghostblade);
 
-            var useER = ComboMenu["useER"].Cast<CheckBox>().CurrentValue;
-            var ERHealth = ComboMenu["ERHealth"].Cast<Slider>().CurrentValue;
-            var UseYommus = ComboMenu["UseYommus"].Cast<CheckBox>().CurrentValue;
+            var useEr = ComboMenu["useER"].Cast<CheckBox>().CurrentValue;
+            var erHealth = ComboMenu["ERHealth"].Cast<Slider>().CurrentValue;
+            var useYommus = ComboMenu["UseYommus"].Cast<CheckBox>().CurrentValue;
 
             if (botrk.IsReady())
             {
-                if (useER && target.HealthPercent <= ERHealth)
+                if (useEr && target.HealthPercent <= erHealth)
                 {
                     botrk.Cast(target);
                 }
             }
 
-            if (yommus.IsReady() && UseYommus)
+            if (yommus.IsReady() && useYommus)
             {
                 yommus.Cast();
 
