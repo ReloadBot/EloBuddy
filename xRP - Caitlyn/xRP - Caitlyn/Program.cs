@@ -15,10 +15,12 @@ namespace xRP_Caitlyn
         public static Spell.Skillshot Q, W, E;
         public static Spell.Targeted R;
         public static AIHeroClient _Player = ObjectManager.Player;
-        public static Menu CaitMenu, ComboMenu, DrawMenu, MiscMenu, HarassMenu, FarmMenu, ItemMenu;
+        public static Menu CaitMenu, ComboMenu, DrawMenu, MiscMenu, HarassMenu, FarmMenu, ItemMenu, PredMenu;
+        public static HitChance QHitChance;
+        public static HitChance WHitChance;
+        public static HitChance EHitChance;
 
 
-        
 
         static void Main(string[] args)
         {
@@ -30,10 +32,10 @@ namespace xRP_Caitlyn
         {
             //Check Champ Name
             if (Player.Instance.ChampionName != "Caitlyn")
-return;
+    return;
 
                 //Spell Instance
-                Q = new Spell.Skillshot(SpellSlot.Q, 1250, SkillShotType.Linear, 1, null, (int)90f);
+                Q = new Spell.Skillshot(SpellSlot.Q, 1200, SkillShotType.Linear);
                 W = new Spell.Skillshot(SpellSlot.W, 800, SkillShotType.Linear);
                 E = new Spell.Skillshot(SpellSlot.E, 980, SkillShotType.Circular);
                 R = new Spell.Targeted(SpellSlot.R, 3000);
@@ -48,11 +50,20 @@ return;
 
             ComboMenu = CaitMenu.AddSubMenu("Combo", "sbtw");
             ComboMenu.AddGroupLabel("Combo Settings");
-            ComboMenu.Add("useQcombo", new CheckBox("Use Q"));
+            ComboMenu.Add("useqcombo", new CheckBox("Use Q"));
             ComboMenu.Add("useWcombo", new CheckBox("Use W"));
             ComboMenu.Add("useEcombo", new CheckBox("Use E"));
             ComboMenu.AddSeparator();
             ComboMenu.Add("usercombo", new CheckBox("Use R if Killable"));
+
+            PredMenu = CaitMenu.AddSubMenu("Prediction", "pred");
+            PredMenu.AddGroupLabel("Prediction");
+            PredMenu.AddSeparator();
+            PredMenu.Add("predq", new CheckBox("Q Hit Chance [CHECK FOR MEDIUM | NO CHECK FOR HIGH]"));
+            PredMenu.AddSeparator();
+            PredMenu.Add("prede", new CheckBox("E Hit Chance [ CHECK FOR MEDIUM | NO CHECK FOR HIGH]"));
+            PredMenu.AddSeparator();
+            PredMenu.Add("predw", new CheckBox("W Hit Chance [ CHECK FOR MEDIUM | NO CHECK FOR HIGH]"));
 
             HarassMenu = CaitMenu.AddSubMenu("Harass", "sbtwharass");
             HarassMenu.AddGroupLabel("Harasss Settings");
@@ -153,6 +164,10 @@ return;
 
         private static void Tick(EventArgs args)
         {
+            QHitChance = PredMenu["predq"].Cast<CheckBox>().CurrentValue ? HitChance.Medium : HitChance.High;
+            WHitChance = PredMenu["predw"].Cast<CheckBox>().CurrentValue ? HitChance.Medium : HitChance.High;
+            EHitChance = PredMenu["prede"].Cast<CheckBox>().CurrentValue ? HitChance.Medium : HitChance.High;
+
             Killsteal();
             Itens();
 
@@ -200,19 +215,20 @@ return;
 
         private static void Combo()
         {
-            var useQ = ComboMenu["useQcombo"].Cast<CheckBox>().CurrentValue;
+            var useQ = ComboMenu["useqcombo"].Cast<CheckBox>().CurrentValue;
             var useW = ComboMenu["useWcombo"].Cast<CheckBox>().CurrentValue;
             var useE = ComboMenu["useEcombo"].Cast<CheckBox>().CurrentValue;
             var useR = ComboMenu["useRcombo"].Cast<CheckBox>().CurrentValue;
 
             if (useQ && Q.IsReady())
             {
-                var target = TargetSelector.GetTarget(Q.Range, DamageType.Physical);
+                var target = TargetSelector.GetTarget(Q.Range, DamageType.Magical);
                 var predq = Q.GetPrediction(target).CastPosition;
 
 
                 if (target.IsValidTarget(Q.Range))
                 {
+                    if (Q.GetPrediction(target).HitChance >= QHitChance)
                     {
 
                         Q.Cast(predq);
@@ -221,30 +237,38 @@ return;
                 }
             }
 
+
             if (useW && W.IsReady())
             {
-                var target = TargetSelector.GetTarget(W.Range, DamageType.Physical);
-                var predw = W.GetPrediction(target).UnitPosition;
+                var target = TargetSelector.GetTarget(W.Range, DamageType.Magical);
+                var predw = W.GetPrediction(target).CastPosition;
+
 
                 if (target.IsValidTarget(W.Range))
                 {
-                    W.Cast(predw - 10f);
+                    if (W.GetPrediction(target).HitChance >= WHitChance)
+                    {
 
+                        W.Cast(predw);
+
+                    }
                 }
-
-
-
             }
 
             if (useE && E.IsReady())
             {
-                var target = TargetSelector.GetTarget(E.Range, DamageType.Physical);
+                var target = TargetSelector.GetTarget(E.Range, DamageType.Magical);
                 var prede = E.GetPrediction(target).CastPosition;
+
 
                 if (target.IsValidTarget(E.Range))
                 {
-                    E.Cast(prede);
+                    if (E.GetPrediction(target).HitChance >= EHitChance)
+                    {
 
+                        E.Cast(prede);
+
+                    }
                 }
             }
 
@@ -271,8 +295,9 @@ return;
                 if (target.Distance(_Player) <= Q.Range)
                 {
                     var predQ = Q.GetPrediction(target).CastPosition;
+
                     Q.Cast(predQ);
-                    return;
+                    
                 }
             }
 
