@@ -51,8 +51,8 @@ namespace xRP_Caitlyn
             ComboMenu = CaitMenu.AddSubMenu("Combo", "sbtw");
             ComboMenu.AddGroupLabel("Combo Settings");
             ComboMenu.Add("useqcombo", new CheckBox("Use Q"));
-            ComboMenu.Add("useWcombo", new CheckBox("Use W"));
-            ComboMenu.Add("useEcombo", new CheckBox("Use E"));
+            ComboMenu.Add("usewcombo", new CheckBox("Use W"));
+            ComboMenu.Add("useecombo", new CheckBox("Use E"));
             ComboMenu.AddSeparator();
             ComboMenu.Add("usercombo", new CheckBox("Use R if Killable"));
 
@@ -216,9 +216,9 @@ namespace xRP_Caitlyn
         private static void Combo()
         {
             var useQ = ComboMenu["useqcombo"].Cast<CheckBox>().CurrentValue;
-            var useW = ComboMenu["useWcombo"].Cast<CheckBox>().CurrentValue;
-            var useE = ComboMenu["useEcombo"].Cast<CheckBox>().CurrentValue;
-            var useR = ComboMenu["useRcombo"].Cast<CheckBox>().CurrentValue;
+            var useW = ComboMenu["usewcombo"].Cast<CheckBox>().CurrentValue;
+            var useE = ComboMenu["useecombo"].Cast<CheckBox>().CurrentValue;
+            var useR = ComboMenu["usercombo"].Cast<CheckBox>().CurrentValue;
 
             if (useQ && Q.IsReady())
             {
