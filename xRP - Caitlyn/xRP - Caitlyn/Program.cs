@@ -92,6 +92,7 @@ namespace xRP_Caitlyn
 
             DrawMenu = CaitMenu.AddSubMenu("Draw", "sbtwdraw");
             DrawMenu.AddGroupLabel("Draw Settings");
+            DrawMenu.Add("drawAA", new CheckBox("Draw Auto Attack Range"));
             DrawMenu.Add("drawQ", new CheckBox("Draw Q Range"));
             DrawMenu.Add("drawE", new CheckBox("Draw E Range"));
             DrawMenu.Add("drawW", new CheckBox("Draw W Range"));
@@ -139,11 +140,17 @@ namespace xRP_Caitlyn
             {
                 if (disable.CurrentValue)
                     return;
-                
+
+                if (DrawMenu["drawAA"].Cast<CheckBox>().CurrentValue && Q.IsLearned)
+                {
+                    Drawing.DrawCircle(_Player.Position,_Player.GetAutoAttackRange(), Color.Orange);
+                }
+
                 if (DrawMenu["drawQ"].Cast<CheckBox>().CurrentValue && Q.IsLearned)
                 {
                     Drawing.DrawCircle(_Player.Position, Q.Range, Color.Navy);
                 }
+
                 if (DrawMenu["drawW"].Cast<CheckBox>().CurrentValue && W.IsLearned)
                 {
                     Drawing.DrawCircle(_Player.Position, W.Range, Color.Green);
@@ -274,12 +281,16 @@ namespace xRP_Caitlyn
 
             if (useR && R.IsReady())
             {
-                var target = TargetSelector.GetTarget(R.Range, DamageType.Physical);
-                
-                if (target.IsValidTarget(R.Range) && _Player.GetSpellDamage(target, SpellSlot.R) > target.Health)
+                if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo))
+                    return;
                 {
-                    R.Cast(target);
+                    var target = TargetSelector.GetTarget(R.Range, DamageType.Physical);
 
+                    if (target.IsValidTarget(R.Range) && _Player.GetSpellDamage(target, SpellSlot.R) > target.Health)
+                    {
+                        R.Cast(target);
+
+                    }
                 }
             }
         }
