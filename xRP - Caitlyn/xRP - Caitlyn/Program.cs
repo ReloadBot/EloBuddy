@@ -2,10 +2,13 @@
 using System.Linq;
 using EloBuddy;
 using EloBuddy.SDK;
+using EloBuddy.SDK.Constants;
 using EloBuddy.SDK.Enumerations;
 using EloBuddy.SDK.Events;
 using EloBuddy.SDK.Menu;
 using EloBuddy.SDK.Menu.Values;
+using EloBuddy.SDK.Rendering;
+using SharpDX;
 using Color = System.Drawing.Color;
 
 namespace xRP_Caitlyn
@@ -99,12 +102,17 @@ namespace xRP_Caitlyn
             DrawMenu.Add("drawR", new CheckBox("Draw R Range"));
             DrawMenu.AddSeparator();
             DrawMenu.Add("disable", new CheckBox("Disable all Drawing"));
+            DrawMenu.AddSeparator();
+            DrawMenu.Add("drawc", new CheckBox("Draw Combo Damage"));
+            
 
 
             Interrupter.OnInterruptableSpell += Interrupter_OnInterruptableSpell;
             Game.OnTick += Tick;
             Drawing.OnDraw += OnDraw;
             Gapcloser.OnGapcloser += Gapcloser_OnGapCloser;
+            Drawing.OnDraw += OnDamageDraw;
+
 
         }
 
@@ -143,7 +151,7 @@ namespace xRP_Caitlyn
 
                 if (DrawMenu["drawAA"].Cast<CheckBox>().CurrentValue && Q.IsLearned)
                 {
-                    Drawing.DrawCircle(_Player.Position,_Player.GetAutoAttackRange(), Color.Orange);
+                    Drawing.DrawCircle(_Player.Position, _Player.GetAutoAttackRange(), Color.Orange);
                 }
 
                 if (DrawMenu["drawQ"].Cast<CheckBox>().CurrentValue && Q.IsLearned)
@@ -167,7 +175,42 @@ namespace xRP_Caitlyn
 
             }
 
+
         }
+
+        // Draw Combo Kill
+        public static void OnDamageDraw(EventArgs args)
+        {
+            var killableText = new Text("",
+            new System.Drawing.Font(System.Drawing.FontFamily.GenericSansSerif, 9, System.Drawing.FontStyle.Bold));
+            var disable = DrawMenu["disable"].Cast<CheckBox>().CurrentValue;
+            var drawDamage = DrawMenu["drawc"].Cast<CheckBox>().CurrentValue;
+            if (disable) return;
+
+            if (drawDamage)
+            {
+                foreach (var ai in EntityManager.Heroes.Enemies)
+                {
+                    if (ai.IsValidTarget())
+                    {
+                        var drawn = 0;
+                        if (ComboDamage(ai) >= ai.Health && drawn == 0)
+                        {
+                            killableText.Position = Drawing.WorldToScreen(ai.Position) - new Vector2(40, -40);
+                            killableText.Color = Color.Red;
+                            killableText.TextValue = "FULL COMBO TO KILL";
+                            killableText.Draw();
+
+                        }
+
+                    }
+                }
+            }
+
+        }
+
+
+
 
         private static void Tick(EventArgs args)
         {
@@ -357,6 +400,31 @@ namespace xRP_Caitlyn
 
 
 
+        }
+
+        // Calculate Combo Damage
+        public static float ComboDamage(Obj_AI_Base target)
+        {
+            var damage = 0d;
+
+            if (Q.IsReady(3))
+            {
+                damage += _Player.GetSpellDamage(target, SpellSlot.Q);
+            }
+
+            if (E.IsReady(2))
+            {
+                damage += _Player.GetSpellDamage(target, SpellSlot.E);
+            }
+
+            if (R.IsReady(5))
+            {
+                damage += _Player.GetSpellDamage(target, SpellSlot.R);
+            }
+
+            damage += _Player.GetAutoAttackDamage(target) * 3;
+            return (float)damage;
+          
         }
 
     }
