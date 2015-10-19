@@ -11,6 +11,7 @@ namespace xRP_Gnar
      class Program
     {
         public static AIHeroClient _player = ObjectManager.Player;
+       
 
         static void Main(string[] args)
         {
@@ -19,12 +20,10 @@ namespace xRP_Gnar
 
         private static void OnLoaded(EventArgs args)
         {
-            if (_player.HasBuff("Mega Gnar"))
-            {
-                {
-                    return;
-                } 
-            }
+            if (_player.BaseSkinName == "gnarbig")
+            { xRP_MegaGnar.MegaGnar.Initialize(); }
+
         }
+
     }
 }
