@@ -58,6 +58,8 @@ namespace xRP_Caitlyn
             ComboMenu.Add("useecombo", new CheckBox("Use E"));
             ComboMenu.AddSeparator();
             ComboMenu.Add("usercombo", new CheckBox("Use R if Killable"));
+            ComboMenu.Add("minR", new Slider("Minimum Range to Cast R [Max for Full Range]", 1500, 0, 3000));
+
 
             PredMenu = CaitMenu.AddSubMenu("Prediction", "pred");
             PredMenu.AddGroupLabel("Prediction");
@@ -299,7 +301,8 @@ namespace xRP_Caitlyn
                     if (W.GetPrediction(target).HitChance >= WHitChance)
                     {
 
-                        W.Cast(predw);
+                        W.Cast(predw +5f);
+
 
                     }
                 }
@@ -328,9 +331,11 @@ namespace xRP_Caitlyn
                     return;
                 {
                     var target = TargetSelector.GetTarget(R.Range, DamageType.Physical);
+                    var minR = ComboMenu["minR"].Cast<Slider>().CurrentValue;
 
                     if (target.IsValidTarget(R.Range) && _Player.GetSpellDamage(target, SpellSlot.R) > target.Health)
                     {
+                        if (minR >= R.Range)
                         R.Cast(target);
 
                     }
