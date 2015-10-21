@@ -303,7 +303,7 @@ namespace xRP_Caitlyn
                     if (W.GetPrediction(target).HitChance >= WHitChance)
                     {
 
-                        W.Cast(predw +5f);
+                        W.Cast(predw +5);
 
 
                     }
