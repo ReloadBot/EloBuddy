@@ -335,39 +335,13 @@ namespace xRP_Caitlyn
                     return;
 
                 {
-                    /*
-                    // Calculator R Damage
-                    var adPorcent = 0;
-                    var rLevel = R.Level;
-                    var damagerPerLevel = 0;
-
-                    if (rLevel == 1)
-                    {
-                        adPorcent = 200;
-                        damagerPerLevel = 250;
-                    }
-                    else if (rLevel == 2)
-                    {
-                        adPorcent = 200;
-                        damagerPerLevel = 475;
-                    }
-                    else if (rLevel == 3)
-                    {
-                        adPorcent = 200;
-                        damagerPerLevel = 700;
-                    }
-                    */
-                    //var damageR = (adPorcent / 100) + damagerPerLevel;
-
                     var target = TargetSelector.GetTarget(R.Range, DamageType.Physical);
                     var nowH = TargetSelector.GetTarget(R.Range, DamageType.Mixed).Health;
                     var rDamage = _Player.CalculateDamageOnUnit(target, DamageType.Physical,
-                        (float) (new[] {250, 475, 700}[R.Level - 1] + 1.2*_Player.FlatPhysicalDamageMod
-                            ));
+                        new float[] {0, 250, 475, 700}[R.Level] + (2.00f*_Player.FlatPhysicalDamageMod));
 
                     if (target.IsValidTarget(R.Range) && rDamage > nowH)
                     {
-                        
                             R.Cast(target);                      
                     }
                 }
