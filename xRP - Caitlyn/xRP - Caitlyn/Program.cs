@@ -349,6 +349,9 @@ namespace xRP_Caitlyn
 
 
             {
+                if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo))
+                    return;
+
                 var armor = TargetSelector.GetTarget(R.Range, DamageType.Physical).Armor;
                 var maxH = TargetSelector.GetTarget(R.Range, DamageType.Mixed).MaxHealth;
                 var nowH = TargetSelector.GetTarget(R.Range, DamageType.Mixed).Health;
@@ -358,9 +361,6 @@ namespace xRP_Caitlyn
                 var reductionDamage = armorPorcent * damageR / 100;
                 var damageEnemy = damageR - reductionDamage;
                
-
-                if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo))
-                    return;
                 {
                     var target = TargetSelector.GetTarget(R.Range, DamageType.Physical);
 
