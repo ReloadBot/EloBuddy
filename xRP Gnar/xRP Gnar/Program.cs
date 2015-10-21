@@ -21,7 +21,7 @@ namespace xRP_Gnar
         private static void OnLoaded(EventArgs args)
         {
             if (_player.BaseSkinName == "gnarbig")
-            { xRP_MegaGnar.MegaGnar.Initialize(); }
+            { xRP_MegaGnar.MegaGnar.gnarbig(); }
 
         }
 

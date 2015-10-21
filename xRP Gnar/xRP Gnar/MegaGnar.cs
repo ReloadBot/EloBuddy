@@ -14,7 +14,7 @@ namespace xRP_MegaGnar
                 
 
 
-        public static void Initialize()
+        public static void gnarbig()
         {
             //Spells Mega Gnar
             Q = new Spell.Skillshot(SpellSlot.Q, 1100, SkillShotType.Linear);

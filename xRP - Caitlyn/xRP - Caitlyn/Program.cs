@@ -238,6 +238,9 @@ namespace xRP_Caitlyn
             {
                 Harass();
             }
+
+            //CALCULOS DA ULT.
+            
         }
 
 
@@ -267,6 +270,24 @@ namespace xRP_Caitlyn
 
         private static void Combo()
         {
+            //Caulculator R
+            var levelDoR = R.Level;
+            var PorgentagemAD = 200;
+            var danoPorLevel = 0;
+            if (levelDoR == 1)
+            {
+
+                danoPorLevel = 250;
+            }
+            else if (levelDoR == 2)
+            {
+                danoPorLevel = 340;
+            }
+            else if (levelDoR == 3)
+            {
+                danoPorLevel = 510;
+            }
+
             var useQ = ComboMenu["useqcombo"].Cast<CheckBox>().CurrentValue;
             var useW = ComboMenu["usewcombo"].Cast<CheckBox>().CurrentValue;
             var useE = ComboMenu["useecombo"].Cast<CheckBox>().CurrentValue;
@@ -326,18 +347,28 @@ namespace xRP_Caitlyn
             }
 
             if (useR && R.IsReady())
+
+
             {
+                var armor = TargetSelector.GetTarget(R.Range, DamageType.Physical).Armor;
+                var maxH = TargetSelector.GetTarget(R.Range, DamageType.Mixed).MaxHealth;
+                var nowH = TargetSelector.GetTarget(R.Range, DamageType.Mixed).Health;
+                var healthLost = maxH - nowH;
+                var armorPorcent = armor / (100 + armor) * 100;
+                var damageR = (PorgentagemAD * healthLost / 100) + danoPorLevel;
+                var reductionDamage = armorPorcent * damageR / 100;
+                var damageEnemy = damageR - reductionDamage;
+               
+
                 if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo))
                     return;
                 {
                     var target = TargetSelector.GetTarget(R.Range, DamageType.Physical);
-                    var minR = ComboMenu["minR"].Cast<Slider>().CurrentValue;
 
-                    if (target.IsValidTarget(R.Range) && _Player.GetSpellDamage(target, SpellSlot.R) > target.Health)
-                    {
-                        if (minR >= R.Range)
+
+                    if (target.IsValidTarget(R.Range) && damageEnemy > nowH)
+                    {                        
                         R.Cast(target);
-
                     }
                 }
             }
@@ -431,6 +462,8 @@ namespace xRP_Caitlyn
             return (float)damage;
           
         }
+
+       
 
     }
 }
