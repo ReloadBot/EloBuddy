@@ -276,7 +276,6 @@ namespace xRP_Caitlyn
             var danoPorLevel = 0;
             if (levelDoR == 1)
             {
-
                 danoPorLevel = 250;
             }
             else if (levelDoR == 2)
