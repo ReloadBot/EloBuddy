@@ -55,11 +55,12 @@ namespace xRP_Lucian
             if (Lucian.Q.IsReady()&& useq)
             {
                 var enemy = TargetSelector.GetTarget(Lucian.Q.Range, DamageType.Physical);
+                var predQ = Lucian.Q.GetPrediction(enemy).CastPosition;
 
                 if (Player.HasBuff("Lightslinger")) return;
                 if (enemy.IsValidTarget() && Lucian.Q.IsInRange(enemy))
                 {
-             Lucian.Q.Cast(enemy);
+                     Lucian.Q.Cast(predQ);
                 }
             }
 
@@ -67,11 +68,12 @@ namespace xRP_Lucian
 
             {
                 var enemy = TargetSelector.GetTarget(Lucian.W.Range, DamageType.Physical);
+                var predW = Lucian.W.GetPrediction(enemy).CastPosition;
 
                 if (Player.HasBuff("Lightslinger")) return;
                 if (enemy.IsValidTarget(Lucian.W.Range))
                 {
-                    Lucian.W.Cast(enemy.Position);
+                    Lucian.W.Cast(predW);
                 }
             }
 

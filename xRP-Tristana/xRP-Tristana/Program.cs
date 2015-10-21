@@ -44,18 +44,11 @@ namespace xRP_Tristana
 
         private static void Game_OnStart(EventArgs args)
         {
-            Chat.Print("xRP Tristana LOADED \n Have Fun.");
-            
-
-
 
             Q = new Spell.Active(SpellSlot.Q, 550 );
             W = new Spell.Skillshot(SpellSlot.W, 825, SkillShotType.Circular, 250, Int32.MaxValue, 80);
             E = new Spell.Targeted(SpellSlot.E, 625);
             R = new Spell.Targeted(SpellSlot.R, 700);
-
-           
-           
 
 
 
@@ -174,7 +167,7 @@ namespace xRP_Tristana
 
             private static void LaneClear()
             {
-                var minion = EntityManager.MinionsAndMonsters.AllMinions;
+                var minion = EntityManager.MinionsAndMonsters.EnemyMinions;
             var tower = ObjectManager.Get<Obj_AI_Turret>().FirstOrDefault(a => a.IsEnemy && !a.IsDead && a.Distance(_Player) < _Player.AttackRange);
             if (minion == null)
                 if (tower == null)

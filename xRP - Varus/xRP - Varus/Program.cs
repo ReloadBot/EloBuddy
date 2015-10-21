@@ -185,12 +185,13 @@ namespace xRP___Varus
 
         private static void Harass()
         {
-            var enemy = TargetSelector.GetTarget(1625, DamageType.Physical);
+            var enemy = TargetSelector.GetTarget(Varus.Q.Range, DamageType.Physical);
+            var predQ = Varus.Q.GetPrediction(enemy).CastPosition;
 
             if (enemy.IsValid && Varus.Q.IsReady() && Varus.Q.IsInRange(enemy) && HarasMenu["hq"].Cast<CheckBox>().CurrentValue)
             {
 
-                Varus.Q.Cast(enemy);
+                Varus.Q.Cast(predQ);
             }
 
         }

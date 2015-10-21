@@ -361,9 +361,12 @@ namespace xRP_Lux
             if (useR && R.IsReady())
             {
                 var target = TargetSelector.GetTarget(R.Range, DamageType.Magical);
+                var rDamage = Me.CalculateDamageOnUnit(target, DamageType.Magical,
+                    new float[] {0, 300, 400, 500}[R.Level] + ((int)75 * Me.FlatMagicDamageMod));
+
                 if (target.IsValidTarget(R.Range))
                 {
-                    if (Me.GetSpellDamage(target, SpellSlot.R) > target.Health)
+                    if (rDamage > target.Health)
                     {
                         R.Cast(target);
 

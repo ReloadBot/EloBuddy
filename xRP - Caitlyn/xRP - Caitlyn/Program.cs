@@ -2,7 +2,6 @@
 using System.Linq;
 using EloBuddy;
 using EloBuddy.SDK;
-using EloBuddy.SDK.Constants;
 using EloBuddy.SDK.Enumerations;
 using EloBuddy.SDK.Events;
 using EloBuddy.SDK.Menu;
@@ -48,7 +47,7 @@ namespace xRP_Caitlyn
             CaitMenu = MainMenu.AddMenu("xRP Caitlyn", "xrpcait");
             CaitMenu.AddGroupLabel("xRP-Caitlyn");
             CaitMenu.AddSeparator();
-            CaitMenu.AddGroupLabel("Version: 1.0.0.0");
+            CaitMenu.AddGroupLabel("Made by: xRPdev");
 
 
             ComboMenu = CaitMenu.AddSubMenu("Combo", "sbtw");
@@ -337,6 +336,8 @@ namespace xRP_Caitlyn
                 {
                     var target = TargetSelector.GetTarget(R.Range, DamageType.Physical);
                     var nowH = TargetSelector.GetTarget(R.Range, DamageType.Mixed).Health;
+
+                    // R Damage calculator
                     var rDamage = _Player.CalculateDamageOnUnit(target, DamageType.Physical,
                         new float[] {0, 250, 475, 700}[R.Level] + (2.00f*_Player.FlatPhysicalDamageMod));
 
