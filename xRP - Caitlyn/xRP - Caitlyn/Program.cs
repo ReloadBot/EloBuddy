@@ -38,8 +38,8 @@ namespace xRP_Caitlyn
 
                 //Spell Instance
                 Q = new Spell.Skillshot(SpellSlot.Q, 1200, SkillShotType.Linear);
-                W = new Spell.Skillshot(SpellSlot.W, 800, SkillShotType.Linear);
-                E = new Spell.Skillshot(SpellSlot.E, 980, SkillShotType.Circular);
+                W = new Spell.Skillshot(SpellSlot.W, 800, SkillShotType.Circular);
+                E = new Spell.Skillshot(SpellSlot.E, 980, SkillShotType.Linear);
                 R = new Spell.Targeted(SpellSlot.R, 3000);
 
 
