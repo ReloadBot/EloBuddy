@@ -38,8 +38,8 @@ namespace xRP_Caitlyn
 
                 //Spell Instance
                 Q = new Spell.Skillshot(SpellSlot.Q, 1200, SkillShotType.Linear);
-                W = new Spell.Skillshot(SpellSlot.W, 800, SkillShotType.Linear);
-                E = new Spell.Skillshot(SpellSlot.E, 980, SkillShotType.Circular);
+                W = new Spell.Skillshot(SpellSlot.W, 800, SkillShotType.Circular);
+                E = new Spell.Skillshot(SpellSlot.E, 980, SkillShotType.Linear);
                 R = new Spell.Targeted(SpellSlot.R, 3000);
 
 
@@ -223,10 +223,12 @@ namespace xRP_Caitlyn
             Itens();
             AutoPotion();
 
-            {
+            
                 if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo))
-                    Combo();
-            }
+                   {
+                       Combo();
+                   }
+            
 
             if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.LaneClear) ||
                 Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.JungleClear))
@@ -304,7 +306,7 @@ namespace xRP_Caitlyn
                     if (W.GetPrediction(target).HitChance >= WHitChance)
                     {
 
-                        W.Cast(predw +5);
+                        W.Cast(predw);
 
 
                     }
