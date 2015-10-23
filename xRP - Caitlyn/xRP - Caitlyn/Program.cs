@@ -222,10 +222,12 @@ namespace xRP_Caitlyn
             Killsteal();
             Itens();
 
-            {
+            
                 if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo))
-                    Combo();
-            }
+                   {
+                       Combo();
+                   }
+            
 
             if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.LaneClear) ||
                 Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.JungleClear))
@@ -303,7 +305,7 @@ namespace xRP_Caitlyn
                     if (W.GetPrediction(target).HitChance >= WHitChance)
                     {
 
-                        W.Cast(predw +5);
+                        W.Cast(predw);
 
 
                     }
