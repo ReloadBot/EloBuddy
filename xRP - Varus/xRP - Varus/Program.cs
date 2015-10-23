@@ -29,18 +29,16 @@ namespace xRP___Varus
 
         public static void Main(string[] args)
         {
-            if (EloBuddy.Player.Instance.ChampionName != ChampName)
-                return;
 
             Loading.OnLoadingComplete += Game_OnStart;
-            Game.OnTick += Game_OnTick;
-            Drawing.OnDraw += OnDraw;
+
         }
 
         private static void Game_OnStart(EventArgs args)
         {
 
-            Chat.Print("xRP - Varus LOADED \n 1.0.0v \n HaveFun");
+            if (EloBuddy.Player.Instance.ChampionName != ChampName)
+                return;
 
             Menu = MainMenu.AddMenu("xRP Varus", "xvarus");
             Menu.AddSeparator();
@@ -67,6 +65,9 @@ namespace xRP___Varus
             DrawMenu.Add("dq", new CheckBox("Draw (Q)"));
             DrawMenu.Add("de", new CheckBox("Draw (W)"));
             DrawMenu.Add("drawDisable", new CheckBox("Disable all Draws"));
+
+            Game.OnTick += Game_OnTick;
+            Drawing.OnDraw += OnDraw;
 
         }
 
