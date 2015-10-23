@@ -221,6 +221,7 @@ namespace xRP_Caitlyn
 
             Killsteal();
             Itens();
+            AutoPotion();
 
             {
                 if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo))
@@ -408,6 +409,13 @@ namespace xRP_Caitlyn
                 yommus.Cast();
 
             }
+
+        }
+
+        private static void AutoPotion()
+        {
+            
+
 
         }
 
