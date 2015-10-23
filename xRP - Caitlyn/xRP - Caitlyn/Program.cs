@@ -17,7 +17,7 @@ namespace xRP_Caitlyn
         public static Spell.Skillshot Q, W, E;
         public static Spell.Targeted R;
         public static AIHeroClient _Player = ObjectManager.Player;
-        public static Menu CaitMenu, ComboMenu, DrawMenu, MiscMenu, HarassMenu, FarmMenu, ItemMenu, PredMenu;
+        public static Menu CaitMenu, ComboMenu, DrawMenu, MiscMenu, HarassMenu, FarmMenu, ItemMenu, PotionMenu, PredMenu;
         public static HitChance QHitChance;
         public static HitChance WHitChance;
         public static HitChance EHitChance;
@@ -87,6 +87,11 @@ namespace xRP_Caitlyn
             ItemMenu.Add("ERhealth", new Slider("Min Health % enemy to Botrk", 20));
             ItemMenu.Add("UseYommus", new CheckBox("Use Yommus"));
             ItemMenu.AddSeparator();
+
+            PotionMenu = CaitMenu.AddSubMenu("Potion", "sbtwpotion");
+            PotionMenu.AddGroupLabel("Potions Settings");
+            PotionMenu.Add("hpPotion", new CheckBox("Hp Potion Use"));
+            PotionMenu.Add("hp%", new Slider("Health Percent"));
 
             MiscMenu = CaitMenu.AddSubMenu("Misc", "sbtwmisc");
             MiscMenu.AddGroupLabel("Misc Settings");
@@ -416,8 +421,16 @@ namespace xRP_Caitlyn
 
         private static void AutoPotion()
         {
-            
+            var usePotion = PotionMenu["hpPotion"].Cast<CheckBox>().CurrentValue;
+            var hpporcent = PotionMenu["hp%"].Cast<Slider>().CurrentValue;
 
+            var potionhp = new Item((int) ItemId.Health_Potion);
+
+            if (potionhp.IsReady() &&
+                usePotion && _Player.Health <= hpporcent)
+            {
+                potionhp.Cast();
+            }
 
         }
 
