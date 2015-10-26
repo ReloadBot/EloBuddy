@@ -139,9 +139,12 @@ namespace xRP_Lux
                 var ally =
                     EntityManager.Heroes.Allies
                         .FirstOrDefault(x => x.IsValidTarget(W.Range) && x.HealthPercent < shieldHealthPercent);
+                
                 if (ally != null && ally.CountEnemiesInRange(650) >= 1)
                 {
-                    W.Cast(ally.Position);
+                    var predq = Q.GetPrediction(ally).CastPosition;
+
+                    W.Cast(predq);
                 }
             }
         }
