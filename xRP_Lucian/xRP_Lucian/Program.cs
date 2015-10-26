@@ -15,21 +15,21 @@ namespace xRP_Lucian
         
         static void Main(string[] args)        
        {
-            if (args == null) throw new ArgumentNullException("args");
             if (EloBuddy.Player.Instance.ChampionName != "Lucian") return;
             Loading.OnLoadingComplete += Game_OnStart;
-            Game.OnTick += Game_OnTick;
-            Drawing.OnDraw += OnDraw;
+         
         }
 
         private static void Game_OnStart(EventArgs args)
         {
-
-            Chat.Print("xRP_Lucian LOADED \n 1.0.0v \n HaveFun");       
+               
    
             // instance initialize
             Lucian.Initialize();
             config.Initialize();
+
+   Game.OnTick += Game_OnTick;
+            Drawing.OnDraw += OnDraw;
 
         }
 
@@ -48,7 +48,7 @@ namespace xRP_Lucian
             var useq = config.ComboMenu["comboq"].Cast<CheckBox>().CurrentValue;
             var usew = config.ComboMenu["combow"].Cast<CheckBox>().CurrentValue;
             var usee = config.ComboMenu["comboe"].Cast<CheckBox>().CurrentValue;
-          
+            if (Player.HasBuff("Lightslinger")) return;
 
 
             
@@ -57,7 +57,7 @@ namespace xRP_Lucian
                 var enemy = TargetSelector.GetTarget(Lucian.Q.Range, DamageType.Physical);
                 var predQ = Lucian.Q.GetPrediction(enemy).CastPosition;
 
-                if (Player.HasBuff("Lightslinger")) return;
+                
                 if (enemy.IsValidTarget() && Lucian.Q.IsInRange(enemy))
                 {
                      Lucian.Q.Cast(predQ);
@@ -70,7 +70,7 @@ namespace xRP_Lucian
                 var enemy = TargetSelector.GetTarget(Lucian.W.Range, DamageType.Physical);
                 var predW = Lucian.W.GetPrediction(enemy).CastPosition;
 
-                if (Player.HasBuff("Lightslinger")) return;
+                
                 if (enemy.IsValidTarget(Lucian.W.Range))
                 {
                     Lucian.W.Cast(predW);
