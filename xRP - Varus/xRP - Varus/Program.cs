@@ -12,19 +12,9 @@ namespace xRP___Varus
 {
     class Program
     {
-        public static AIHeroClient Player
-        {
-            get { return ObjectManager.Player; }
 
-        }
-
-        public static Menu Menu,
-            FarmMenu,
-            DrawMenu,
-            HarasMenu,
-            ItemMenu,
-            ComboMenu,
-            MiscMenu;
+        public static AIHeroClient _player = ObjectManager.Player;
+        public static Menu Menu,FarmMenu,DrawMenu,HarasMenu,ItemMenu, ComboMenu, MiscMenu;
 
         public const string ChampName = "Varus";
 
@@ -119,7 +109,7 @@ namespace xRP___Varus
                 {
                     foreach (var rtarget in EntityManager.Heroes.Enemies.Where(hero => hero.IsValidTarget(Varus.Q.Range)))
                     {
-                        if (Player.GetSpellDamage(rtarget, SpellSlot.R) >= rtarget.Health)
+                        if (_player.GetSpellDamage(rtarget, SpellSlot.R) >= rtarget.Health)
                         {
 
                             {
@@ -206,7 +196,7 @@ namespace xRP___Varus
                 var enemy = TargetSelector.GetTarget(botrk.Range, DamageType.Physical);
 
                 if (enemy.IsValidTarget(botrk.Range) &&
-                Player.Health + Player.GetItemDamage(enemy, (ItemId) botrk.Id) < Player.MaxHealth)
+                _player.Health + _player.GetItemDamage(enemy, (ItemId) botrk.Id) < _player.MaxHealth)
                 {
                     botrk.Cast(enemy);
                 }
@@ -218,14 +208,12 @@ namespace xRP___Varus
 
         private static void LaneClear()
         {
-            var minion = ObjectManager.Get<Obj_AI_Minion>().FirstOrDefault(a => a.IsEnemy && !a.IsDead && a.Distance(Player) < Player.AttackRange);
-
-            if (minion == null)
-                return;
-
+            var minion =
+                EntityManager.Heroes.Enemies.OrderBy(a => a.Health).FirstOrDefault(
+                        a => a.Distance(Player.Instance) < Varus.Q.Range && !a.IsDead && !a.IsInvulnerable);
 
             if (Varus.E.IsReady() && Varus.E.IsInRange(minion))
-                if (minion.CountEnemiesInRange(Player.GetAutoAttackRange()) >= ComboMenu["farme"].Cast<Slider>().CurrentValue)
+                if (minion.CountEnemiesInRange(_player.GetAutoAttackRange()) >= ComboMenu["farme"].Cast<Slider>().CurrentValue)
                 {
                     Varus.E.Cast(minion);
                 }
@@ -239,25 +227,30 @@ namespace xRP___Varus
 
         private static void Harass()
         {
-
-            var enemy = TargetSelector.GetTarget(Varus.Q.Range, DamageType.Physical);
-            var predQ = Varus.Q.GetPrediction(enemy).CastPosition;
             var useq = HarasMenu["useq"].Cast<CheckBox>().CurrentValue;
 
-            if (useq)
+            if (Varus.Q.IsCharging && useq)
             {
-                var target = TargetSelector.GetTarget(Varus.Q.MaximumRange - 50, DamageType.Physical);
-                var predq = Varus.Q.GetPrediction(target);
+                var target = TargetSelector.GetTarget(Varus.Q.MaximumRange, DamageType.Magical);
+                if (target != null)
                 {
-                    if (Varus.Q.IsInRange(target) && Varus.Q.IsReady())
+                    var prediction = Varus.Q.GetPrediction(target);
+                    if (prediction.HitChance >= Varus.Q.MinimumHitChance)
                     {
-                        if (Varus.Q.IsCharging)
+                        if (Varus.Q.IsFullyCharged)
                         {
-                            Varus.Q2.Cast(predq.CastPosition);
+                            if (Varus.Q.Cast(target))
+                            {
+                                return;
+                            }
                         }
                         else
                         {
-                            Varus.Q.StartCharging();
+                              if (Varus.Q.Cast(prediction.CastPosition))
+                                {
+                                    return;
+                                }
+                            
                         }
                     }
                 }
