@@ -175,17 +175,17 @@ namespace xRP___Varus
             var menubotrk = ItemMenu["useer"].Cast<CheckBox>().CurrentValue;
 
 
-                Item manamune = new Item((int)ItemId.Manamune, 550);
+                Item manamune = new Item((int)ItemId.Manamune);
                 Item botrk = new Item((int)ItemId.Blade_of_the_Ruined_King, 550);
 
 
                 if (menumura && manamune.IsReady())
             {
-                var enemy = TargetSelector.GetTarget(manamune.Range, DamageType.Physical);
+                var enemy = TargetSelector.GetTarget(_player.GetAutoAttackRange()-50, DamageType.Physical);
 
-                if (enemy.IsValid && manamune.IsInRange(enemy))
+                if (enemy.IsValid)
                 {
-                    manamune.Cast(enemy);
+                    manamune.Cast();
                 }
             }
 
