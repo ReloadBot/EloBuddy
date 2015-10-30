@@ -107,13 +107,19 @@ namespace xRP___Varus
             {
                 try
                 {
-                    foreach (var rtarget in EntityManager.Heroes.Enemies.Where(hero => hero.IsValidTarget(Varus.Q.Range)))
+                    foreach (var qtarget in EntityManager.Heroes.Enemies.Where(hero => hero.IsValidTarget(Varus.Q.Range)))
                     {
-                        if (_player.GetSpellDamage(rtarget, SpellSlot.R) >= rtarget.Health)
+                        if (_player.GetSpellDamage(qtarget, SpellSlot.R) >= qtarget.Health)
                         {
+                            var predq = Varus.Q.GetPrediction(qtarget);
 
+                            if (Varus.Q.IsCharging)
                             {
-                                Varus.Q.Cast(rtarget);
+                                Varus.Q2.Cast(predq.CastPosition);
+                            }
+                            else
+                            {
+                                Varus.Q.StartCharging();
                             }
                         }
                     }
