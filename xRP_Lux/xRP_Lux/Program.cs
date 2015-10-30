@@ -212,6 +212,8 @@ namespace xRP_Lux
 
         private static void Tick(EventArgs args)
         {
+
+
             QHitChance = PredMenu["predq"].Cast<CheckBox>().CurrentValue ? HitChance.Medium : HitChance.High;
             EHitChance = PredMenu["prede"].Cast<CheckBox>().CurrentValue ? HitChance.Medium : HitChance.High;
             Killsteal();
@@ -300,9 +302,13 @@ namespace xRP_Lux
                 {
                     foreach (var rtarget in EntityManager.Heroes.Enemies.Where(hero => hero.IsValidTarget(R.Range)))
                     {
-                        if (Me.GetSpellDamage(rtarget, SpellSlot.R) >= rtarget.Health)
+                        var rDamage = Me.CalculateDamageOnUnit(rtarget, DamageType.Magical,
+                            new float[] { 0, 300, 400, 500 }[R.Level] + ((int)75 * Me.FlatMagicDamageMod));
+
+                        if (rDamage > rtarget.Health)
                         {
                             var poutput = R.GetPrediction(rtarget);
+
                             if (poutput.HitChance >= HitChance.Medium)
                             {
                                 R.Cast(poutput.CastPosition);
