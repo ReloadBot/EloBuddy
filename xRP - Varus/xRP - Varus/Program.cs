@@ -23,7 +23,8 @@ namespace xRP___Varus
             DrawMenu,
             HarasMenu,
             ItemMenu,
-            ComboMenu;
+            ComboMenu,
+            MiscMenu;
 
         public const string ChampName = "Varus";
 
@@ -52,7 +53,10 @@ namespace xRP___Varus
             ItemMenu.Add("usemana", new CheckBox("Use ManaMune in Combo"));
             ItemMenu.Add("useer", new CheckBox("Use  BOTRK in Combo"));
 
-
+            MiscMenu = Menu.AddSubMenu("Misc", "sbtwmisc");
+            MiscMenu.AddGroupLabel("Misc Settings");
+            MiscMenu.Add("Rgap", new CheckBox("R AntiGapcloser"));
+            MiscMenu.Add("ksq", new CheckBox("KillSteal W/ Q"));
 
             FarmMenu = Menu.AddSubMenu("Lane Menu", "xlane");
             FarmMenu.Add("farme", new Slider("Use (E) Farm Min Minions", 1,0,6));
@@ -68,11 +72,29 @@ namespace xRP___Varus
 
             Game.OnTick += Game_OnTick;
             Drawing.OnDraw += OnDraw;
+            Gapcloser.OnGapcloser += Gapcloser_OnGapCloser;
 
         }
 
+
+        private static void Gapcloser_OnGapCloser
+            (AIHeroClient sender, Gapcloser.GapcloserEventArgs gapcloser)
+        {
+            if (!MiscMenu["Rgap"].Cast<CheckBox>().CurrentValue) return;
+            if (ObjectManager.Player.Distance(gapcloser.Sender, true) <
+                Varus.R.Range * Varus.R.Range && sender.IsValidTarget())
+            {
+                Varus.R.Cast(gapcloser.Sender);
+            }
+        }
+
+        
+
+
         private static void Game_OnTick(EventArgs args)
         {
+            Killsteal();
+
             if (Orbwalker.ActiveModesFlags ==(Orbwalker.ActiveModes.Combo))
             {
                 Combo();
@@ -86,6 +108,30 @@ namespace xRP___Varus
             if (Orbwalker.ActiveModesFlags == (Orbwalker.ActiveModes.Harass))
             {
                 Harass();
+            }
+        }
+
+        private static void Killsteal()
+        {
+            if (MiscMenu["ksq"].Cast<CheckBox>().CurrentValue && Varus.Q.IsReady())
+            {
+                try
+                {
+                    foreach (var rtarget in EntityManager.Heroes.Enemies.Where(hero => hero.IsValidTarget(Varus.Q.Range)))
+                    {
+                        if (Player.GetSpellDamage(rtarget, SpellSlot.R) >= rtarget.Health)
+                        {
+
+                            {
+                                Varus.Q.Cast(rtarget);
+                            }
+                        }
+                    }
+                }
+                catch
+                {
+                    // ignored
+                }
             }
         }
 
