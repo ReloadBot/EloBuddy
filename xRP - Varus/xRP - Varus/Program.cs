@@ -55,11 +55,11 @@ namespace xRP___Varus
 
 
             FarmMenu = Menu.AddSubMenu("Lane Menu", "xlane");
-            FarmMenu.Add("farme", new Slider("Use (W) Farm Min Minions", 1,0,30));
+            FarmMenu.Add("farme", new Slider("Use (E) Farm Min Minions", 1,0,6));
             FarmMenu.Add("farmq", new CheckBox("Use (Q) to Farm"));
 
             HarasMenu = Menu.AddSubMenu("Haras Menu", "xharas");
-            HarasMenu.Add("hq", new CheckBox("Use (Q) to Harass"));
+            HarasMenu.Add("useq", new CheckBox("Use (Q) to Harass"));
 
             DrawMenu = Menu.AddSubMenu("Draw Menu", "xDraw");
             DrawMenu.Add("dq", new CheckBox("Draw (Q)"));
@@ -95,6 +95,7 @@ namespace xRP___Varus
             
                 var useq = ComboMenu["comboq"].Cast<CheckBox>().CurrentValue;
                 var usee = ComboMenu["comboe"].Cast<CheckBox>().CurrentValue;
+                var user = ComboMenu["combor"].Cast<Slider>().CurrentValue;
                 
 
             if (useq)
@@ -119,14 +120,17 @@ namespace xRP___Varus
             if (usee)
             {
                 var target = TargetSelector.GetTarget(Varus.E.Radius, DamageType.Physical);
+                var predE = Varus.Q.GetPrediction(target).CastPosition;
                 {
                     if (target.IsValid && Varus.E.IsInRange(target))
                        
                     {
-                        Varus.E.Cast(target);
+                        Varus.E.Cast(predE);
                     }
                 }
             }
+
+
 
 
 
@@ -154,6 +158,7 @@ namespace xRP___Varus
                 
             {
                 var enemy = TargetSelector.GetTarget(botrk.Range, DamageType.Physical);
+
                 if (enemy.IsValidTarget(botrk.Range) &&
                 Player.Health + Player.GetItemDamage(enemy, (ItemId) botrk.Id) < Player.MaxHealth)
                 {
@@ -171,6 +176,8 @@ namespace xRP___Varus
 
             if (minion == null)
                 return;
+
+
             if (Varus.E.IsReady() && Varus.E.IsInRange(minion))
                 if (minion.CountEnemiesInRange(Player.GetAutoAttackRange()) >= ComboMenu["farme"].Cast<Slider>().CurrentValue)
                 {
@@ -186,15 +193,29 @@ namespace xRP___Varus
 
         private static void Harass()
         {
+
             var enemy = TargetSelector.GetTarget(Varus.Q.Range, DamageType.Physical);
             var predQ = Varus.Q.GetPrediction(enemy).CastPosition;
+            var useq = HarasMenu["useq"].Cast<CheckBox>().CurrentValue;
 
-            if (enemy.IsValid && Varus.Q.IsReady() && Varus.Q.IsInRange(enemy) && HarasMenu["hq"].Cast<CheckBox>().CurrentValue)
+            if (useq)
             {
-
-                Varus.Q.Cast(predQ);
+                var target = TargetSelector.GetTarget(Varus.Q.MaximumRange - 50, DamageType.Physical);
+                var predq = Varus.Q.GetPrediction(target);
+                {
+                    if (Varus.Q.IsInRange(target) && Varus.Q.IsReady())
+                    {
+                        if (Varus.Q.IsCharging)
+                        {
+                            Varus.Q2.Cast(predq.CastPosition);
+                        }
+                        else
+                        {
+                            Varus.Q.StartCharging();
+                        }
+                    }
+                }
             }
-
         }
 
         private static void OnDraw(EventArgs args)
