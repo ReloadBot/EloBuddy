@@ -28,7 +28,7 @@ namespace xRP___Varus
         private static void Game_OnStart(EventArgs args)
         {
 
-            if (EloBuddy.Player.Instance.ChampionName != ChampName)
+            if (Player.Instance.ChampionName != ChampName)
                 return;
 
             Menu = MainMenu.AddMenu("xRP Varus", "xvarus");
@@ -156,7 +156,7 @@ namespace xRP___Varus
             if (usee)
             {
                 var target = TargetSelector.GetTarget(Varus.E.Radius, DamageType.Physical);
-                var predE = Varus.Q.GetPrediction(target).CastPosition;
+                var predE = Varus.E.GetPrediction(target).CastPosition;
                 {
                     if (target.IsValid && Varus.E.IsInRange(target))
                        
@@ -196,7 +196,7 @@ namespace xRP___Varus
                 var enemy = TargetSelector.GetTarget(botrk.Range, DamageType.Physical);
 
                 if (enemy.IsValidTarget(botrk.Range) &&
-                _player.Health + _player.GetItemDamage(enemy, (ItemId) botrk.Id) < _player.MaxHealth)
+                _player.Health + _player.GetItemDamage(enemy, botrk.Id) < _player.MaxHealth)
                 {
                     botrk.Cast(enemy);
                 }
@@ -229,28 +229,20 @@ namespace xRP___Varus
         {
             var useq = HarasMenu["useq"].Cast<CheckBox>().CurrentValue;
 
-            if (Varus.Q.IsCharging && useq)
+            if (useq)
             {
-                var target = TargetSelector.GetTarget(Varus.Q.MaximumRange, DamageType.Magical);
-                if (target != null)
+                var target = TargetSelector.GetTarget(Varus.Q.MaximumRange - 50, DamageType.Physical);
+                var predq = Varus.Q.GetPrediction(target);
                 {
-                    var prediction = Varus.Q.GetPrediction(target);
-                    if (prediction.HitChance >= Varus.Q.MinimumHitChance)
+                    if (Varus.Q.IsInRange(target) && Varus.Q.IsReady())
                     {
-                        if (Varus.Q.IsFullyCharged)
+                        if (Varus.Q.IsCharging)
                         {
-                            if (Varus.Q.Cast(target))
-                            {
-                                return;
-                            }
+                            Varus.Q2.Cast(predq.CastPosition);
                         }
                         else
                         {
-                              if (Varus.Q.Cast(prediction.CastPosition))
-                                {
-                                    return;
-                                }
-                            
+                            Varus.Q.StartCharging();
                         }
                     }
                 }
