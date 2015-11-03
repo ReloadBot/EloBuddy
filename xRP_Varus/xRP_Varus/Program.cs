@@ -6,7 +6,6 @@ using EloBuddy.SDK.Enumerations;
 using EloBuddy.SDK.Events;
 using EloBuddy.SDK.Menu;
 using EloBuddy.SDK.Menu.Values;
-using SharpDX;
 using Color = System.Drawing.Color;
 
 namespace xRP_Varus
@@ -76,7 +75,10 @@ namespace xRP_Varus
             LaneClearMenu = VarusMenu.AddSubMenu("Lane Clear", "laneclear");
             LaneClearMenu.AddGroupLabel("Lane Clear Settings");
             LaneClearMenu.Add("LCQ", new CheckBox("Use Q"));
+            LaneClearMenu.Add("countM", new Slider("Min minions to Q", 3, 0, 6));
             LaneClearMenu.Add("LCE", new CheckBox("Use E"));
+            LaneClearMenu.Add("countME", new Slider("Min minions to E", 3, 0, 6));
+            
 
 
             Game.OnTick += Tick;
@@ -135,13 +137,13 @@ namespace xRP_Varus
                     Combo();
             }
 
-            /*
+            
             if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.LaneClear) ||
                 Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.JungleClear))
             {
-                LaneClearA.LaneClear();
+                LaneClear();
             }
-
+            /*
             if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Harass))
             {
                 Harass();
@@ -176,81 +178,101 @@ namespace xRP_Varus
                     // ignored
                 }
             }
-            if (MiscMenu["ksq"].Cast<CheckBox>().CurrentValue && R.IsReady())
-            {
-                try
-                {
-                    foreach (
-                        var qtarget in EntityManager.Heroes.Enemies.Where(hero => hero.IsValidTarget(Q.MaximumRange)))
-                    {
-
-                        if (Me.GetSpellDamage(qtarget, SpellSlot.Q) > qtarget.Health)
-                        {
-                            var poutput = R.GetPrediction(qtarget);
-
-                            if (poutput.HitChance >= HitChance.Medium)
-                            {
-                                Q.Cast(poutput.CastPosition);
-                            }
-                        }
-                    }
-                }
-                catch
-                {
-                    // ignored
-                }
-            }
+            
         }
 
 
         private static void Combo()
         {
-            var useQ = ComboMenu["usecomboq"].Cast<CheckBox>().CurrentValue;
-            var useW = ComboMenu["usecombow"].Cast<Slider>().CurrentValue;
+            var useQ = ComboMenu["usecomboq"].Cast<CheckBox>().CurrentValue;         
             var useE = ComboMenu["usecomboe"].Cast<CheckBox>().CurrentValue;
-            var useR = ComboMenu["rkill"].Cast<CheckBox>().CurrentValue;
+            var useR = ComboMenu["usecombor"].Cast<CheckBox>().CurrentValue;
 
-
-            var target = TargetSelector.GetTarget(Q.MaximumRange, DamageType.Magical);
-
-            if (target != null)
-
-                if (useQ)
+            if (Q.IsReady() && useQ)
             {
-                var prediction = Q.GetPrediction(target);
-                if (prediction.HitChance >= Q.MinimumHitChance)
+                var target = TargetSelector.GetTarget(Q.MaximumRange, DamageType.Physical);
+                var predQ = Q.GetPrediction(target);
                 {
-                    if (!Q.IsCharging)
+                    if (target.IsValidTarget(Q.MaximumRange) && !Q.IsCharging)
                     {
                         Q.StartCharging();
                         return;
                     }
-                    if (Q.Range == Q.MaximumRange)
-                    {
-                        if (Q.Cast(target))
-                        {
-                            return;
-                        }
-                    }
-                    else
-                    {
-                        if (Me.IsInRange(prediction.UnitPosition + (prediction.UnitPosition - Me.ServerPosition).Normalized(), Q.Range))
-                        {
-                            if (Q.Cast(prediction.CastPosition))
-                            {
-                                return;
-                            }
-                        }
-                    }
 
-                    if (Q.IsCharging)
+                    if (Q.IsFullyCharged && !target.IsValidTarget(1650))
                     {
                         return;
                     }
 
-
+                    if (predQ.HitChance >= HitChance.Medium)
+                    {
+                        Q.Cast(predQ.CastPosition);
+                    }
                 }
             }
+
+            if (E.IsReady() && useE)
+            {
+                var target = TargetSelector.GetTarget(E.Radius, DamageType.Physical);
+                var predE = E.GetPrediction(target);
+
+                if (target.IsValidTarget(E.Range) && predE.HitChance >= HitChance.Medium)
+                {
+                    E.Cast(predE.CastPosition);
+                }
+            }
+
+            if (R.IsReady() && useR)
+            {
+                var target = TargetSelector.GetTarget(R.Range, DamageType.Physical);
+                var predR = R.GetPrediction(target);
+
+                if (target.IsValidTarget(R.Range))
+                {
+                    R.Cast(predR.CastPosition);
+                }
+            }
+
+        }
+
+        private static void LaneClear()
+        {
+
+            var farmQ = LaneClearMenu["farmQ"].Cast<CheckBox>().CurrentValue;
+            var farmE = LaneClearMenu["FarmE"].Cast<CheckBox>().CurrentValue;
+
+            var minions = EntityManager.MinionsAndMonsters.EnemyMinions.OrderBy(a => a.Health).FirstOrDefault(
+                        a => a.Distance(Player.Instance) < Q.MaximumRange && !a.IsDead && !a.IsInvulnerable);
+
+            if (Q.IsReady() && farmQ)
+            {
+                var countMinion = LaneClearMenu["countM"].Cast<Slider>().CurrentValue;
+
+                if (!Q.IsCharging && minions.CountEnemiesInRange(Q.MaximumRange - 50f) <= countMinion)
+                {
+                    Q.StartCharging();
+                    return;
+                }
+
+                if (Q.IsFullyCharged)
+                {
+                    Q.Cast(minions);
+                }
+
+            }
+
+            if (E.IsReady() && farmE)
+            {
+                var countMinion = LaneClearMenu["countME"].Cast<Slider>().CurrentValue;
+
+                if (minions.CountEnemiesInRange(E.Width) >= countMinion)
+                {
+                    E.Cast(minions);
+                }
+            }
+
+
+
         }
     }
 }
