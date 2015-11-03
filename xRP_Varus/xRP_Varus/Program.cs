@@ -238,14 +238,14 @@ namespace xRP_Varus
         private static void LaneClear()
         {
 
-            var farmQ = LaneClearMenu["farmQ"].Cast<CheckBox>().CurrentValue;
-            var farmE = LaneClearMenu["FarmE"].Cast<CheckBox>().CurrentValue;
-
-            var minions = EntityManager.MinionsAndMonsters.EnemyMinions.OrderBy(a => a.Health).FirstOrDefault(
-                        a => a.Distance(Player.Instance) < Q.MaximumRange && !a.IsDead && !a.IsInvulnerable);
+            var farmQ = LaneClearMenu["LCQ"].Cast<CheckBox>().CurrentValue;
+            var farmE = LaneClearMenu["LCE"].Cast<CheckBox>().CurrentValue;          
 
             if (Q.IsReady() && farmQ)
             {
+                var minions = EntityManager.MinionsAndMonsters.EnemyMinions.OrderBy(a => a.Health).FirstOrDefault(
+                        a => a.Distance(Player.Instance) < Q.MaximumRange && !a.IsDead && !a.IsInvulnerable);
+
                 var countMinion = LaneClearMenu["countM"].Cast<Slider>().CurrentValue;
 
                 if (!Q.IsCharging && minions.CountEnemiesInRange(Q.MaximumRange - 50f) <= countMinion)
@@ -263,6 +263,9 @@ namespace xRP_Varus
 
             if (E.IsReady() && farmE)
             {
+                var minions = EntityManager.MinionsAndMonsters.EnemyMinions.OrderBy(a => a.Health).FirstOrDefault(
+                        a => a.Distance(Player.Instance) < E.Range && !a.IsDead && !a.IsInvulnerable);
+
                 var countMinion = LaneClearMenu["countME"].Cast<Slider>().CurrentValue;
 
                 if (minions.CountEnemiesInRange(E.Width) >= countMinion)
