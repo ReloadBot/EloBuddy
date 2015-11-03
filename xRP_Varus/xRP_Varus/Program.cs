@@ -52,6 +52,8 @@ namespace xRP_Varus
 
 
             HarassMenu = VarusMenu.AddSubMenu("HarassMenu", "Harass");
+            ComboMenu.AddGroupLabel("Harass Settings");
+            ComboMenu.AddSeparator();
             HarassMenu.Add("useQHarass", new CheckBox("Use Q"));
             HarassMenu.Add("useEHarass", new CheckBox("Use E"));
             HarassMenu.Add("waitAA", new CheckBox("wait for AA to finish", false));
@@ -74,6 +76,7 @@ namespace xRP_Varus
 
             LaneClearMenu = VarusMenu.AddSubMenu("Lane Clear", "laneclear");
             LaneClearMenu.AddGroupLabel("Lane Clear Settings");
+            DrawMenu.AddSeparator();
             LaneClearMenu.Add("LCQ", new CheckBox("Use Q"));
             LaneClearMenu.Add("countM", new Slider("Min minions to Q", 3, 0, 6));
             LaneClearMenu.Add("LCE", new CheckBox("Use E"));
