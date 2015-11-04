@@ -2,7 +2,9 @@
 using System.Linq;
 using EloBuddy;
 using EloBuddy.SDK;
+using EloBuddy.SDK.Enumerations;
 using EloBuddy.SDK.Events;
+using EloBuddy.SDK.Menu;
 using EloBuddy.SDK.Menu.Values;
 using EloBuddy.SDK.Rendering;
 using Color = System.Drawing.Color;
@@ -11,24 +13,53 @@ namespace xRP_Lucian
 {
     class Program
     {
-        public static AIHeroClient Player {get { return ObjectManager.Player; }}
+
+        public static Spell.Skillshot Q;
+        public static Spell.Skillshot W;
+        public static Spell.Active E;
+        public static Spell.Skillshot R;
+
+        public static Menu Menu, ComboMenu, FarMenu, HarassMenu, DrawMenu;
+        public static AIHeroClient _player {get { return ObjectManager.Player; }}
         
         static void Main(string[] args)        
        {
             if (EloBuddy.Player.Instance.ChampionName != "Lucian") return;
+           
             Loading.OnLoadingComplete += Game_OnStart;
          
         }
 
         private static void Game_OnStart(EventArgs args)
         {
-               
-   
-            // instance initialize
-            Lucian.Initialize();
-            config.Initialize();
+            Q = new Spell.Skillshot(SpellSlot.Q, 1100, SkillShotType.Linear);
+            W = new Spell.Skillshot(SpellSlot.W, 1000, SkillShotType.Circular);
+            E = new Spell.Active(SpellSlot.E, 425);
+            R = new Spell.Skillshot(SpellSlot.R, 1400, SkillShotType.Linear);
 
-   Game.OnTick += Game_OnTick;
+
+
+            Menu = MainMenu.AddMenu("xRP_Lucian", "xlucian");
+            Menu.AddSeparator();
+
+            ComboMenu = Menu.AddSubMenu("Combo Menu", "xcombo");
+            ComboMenu.Add("comboq", new CheckBox("Use (Q) in Combo"));
+            ComboMenu.Add("combow", new CheckBox("Use (W) in Combo"));
+            ComboMenu.Add("comboe", new CheckBox("Use (E) in Combo", true));
+            ComboMenu.Add("combor", new Slider("Min Life to (R)", 30, 0, 100));
+
+            FarMenu = Menu.AddSubMenu("Farm Menu", "xfarm");
+            FarMenu.Add("farmq", new CheckBox("Use (Q) to Farm", true));
+            FarMenu.Add("farmw", new CheckBox("Use (W) to Farm", true));
+            FarMenu.Add("farme", new CheckBox("Use (E) to Farm", true));
+
+            DrawMenu = Menu.AddSubMenu("Farm Menu", "xfarm");
+            DrawMenu.Add("drawq", new CheckBox("Draw (Q)", true));
+            DrawMenu.Add("draww", new CheckBox("Draw(W)", true));
+            DrawMenu.Add("drawe", new CheckBox("Draw(E)", true));
+
+
+            Game.OnTick += Game_OnTick;
             Drawing.OnDraw += OnDraw;
 
         }
@@ -43,84 +74,81 @@ namespace xRP_Lucian
                 Harass();
         }
 
+
         public static void Combo()
         {
-            var useq = config.ComboMenu["comboq"].Cast<CheckBox>().CurrentValue;
-            var usew = config.ComboMenu["combow"].Cast<CheckBox>().CurrentValue;
-            var usee = config.ComboMenu["comboe"].Cast<CheckBox>().CurrentValue;
+            var useq = ComboMenu["comboq"].Cast<CheckBox>().CurrentValue;
+            var usew = ComboMenu["combow"].Cast<CheckBox>().CurrentValue;
+            var usee = ComboMenu["comboe"].Cast<CheckBox>().CurrentValue;
+
             if (Player.HasBuff("Lightslinger")) return;
 
 
             
-            if (Lucian.Q.IsReady()&& useq)
+            if (Q.IsReady()&& useq)
             {
-                var enemy = TargetSelector.GetTarget(Lucian.Q.Range, DamageType.Physical);
-                var predQ = Lucian.Q.GetPrediction(enemy).CastPosition;
+                var enemy = TargetSelector.GetTarget(Q.Range, DamageType.Physical);
+                var predQ = Q.GetPrediction(enemy).CastPosition;
 
                 
-                if (enemy.IsValidTarget() && Lucian.Q.IsInRange(enemy))
+                if (enemy.IsValidTarget() && Q.IsInRange(enemy))
                 {
-                     Lucian.Q.Cast(predQ);
+                     Q.Cast(predQ);
                 }
             }
 
-            if (Lucian.W.IsReady() && usew)
+            if (W.IsReady() && usew)
 
             {
-                var enemy = TargetSelector.GetTarget(Lucian.W.Range, DamageType.Physical);
-                var predW = Lucian.W.GetPrediction(enemy).CastPosition;
+                var enemy = TargetSelector.GetTarget(W.Range, DamageType.Physical);
+                var predW = W.GetPrediction(enemy).CastPosition;
 
                 
-                if (enemy.IsValidTarget(Lucian.W.Range))
+                if (enemy.IsValidTarget(W.Range))
                 {
-                    Lucian.W.Cast(predW);
+                    W.Cast(predW);
                 }
             }
 
 
-            if (Lucian.E.IsReady() && usee)
+            if (E.IsReady() && usee)
             {
 
-                var enemy = TargetSelector.GetTarget(Lucian.E.Range, DamageType.Physical);
+                var enemy = TargetSelector.GetTarget(E.Range, DamageType.Physical);
 
-                if (enemy.IsValidTarget(Lucian.E.Range))
+                if (enemy.IsValidTarget(E.Range))
                 {
-                    Lucian.E.Cast(Game.CursorPos);
+                    E.Cast(Game.CursorPos);
                 }
             }
     }
 
         private static void LaneClear()
         {
-            var farmq = config.ComboMenu["farmq"].Cast<CheckBox>().CurrentValue;
-            var farmw = config.ComboMenu["farmw"].Cast<CheckBox>().CurrentValue;
-            var farme = config.ComboMenu["farme"].Cast<CheckBox>().CurrentValue;
+            var farmq = ComboMenu["farmq"].Cast<CheckBox>().CurrentValue;
+            var farmw = ComboMenu["farmw"].Cast<CheckBox>().CurrentValue;
+            var farme = ComboMenu["farme"].Cast<CheckBox>().CurrentValue;
 
-           var minions = ObjectManager.Get<Obj_AI_Minion>().OrderBy(m => m.Health).Where(m => m.IsEnemy);
+            var minion = EntityManager.MinionsAndMonsters.EnemyMinions.OrderBy(a => a.Health).FirstOrDefault(
+                        a => a.Distance(Player.Instance) < _player.GetAutoAttackRange() && !a.IsDead && !a.IsInvulnerable);
 
-
-
-            var objAiMinions = minions as Obj_AI_Minion[] ?? minions.ToArray();
-            foreach (var minion in objAiMinions)
-            if (Lucian.Q.IsReady() && Lucian.Q.IsInRange(minion) && farmq )
-
+            
+            if (Q.IsReady() && Q.IsInRange(minion) && farmq )
             {
                 if (Player.HasBuff("Lightslinger")) return;
-                Lucian.Q.Cast(minion);
+                Q.Cast(minion);
             }
 
-            foreach (var minion in objAiMinions)
-            if (Lucian.W.IsReady() && Lucian.W.IsInRange(minion) && farmw)
+            if (W.IsReady() && W.IsInRange(minion) && farmw)
             {
                 if (Player.HasBuff("Lightslinger")) return;
-                Lucian.W.Cast(minion);
+                W.Cast(minion);
             }
 
-            foreach (var minion in objAiMinions)
-                if (Lucian.E.IsReady() && farme && Lucian.E.IsInRange(minion))
+                if (E.IsReady() && farme && E.IsInRange(minion))
                 {
                     if (Player.HasBuff("Lightslinger")) return;
-                    Lucian.E.Cast(Game.CursorPos);
+                    E.Cast(Game.CursorPos);
 
                 }
 }
@@ -132,20 +160,20 @@ namespace xRP_Lucian
 
         private static void OnDraw(EventArgs args)
         {
-            var drawq = config.ComboMenu["drawq"].Cast<CheckBox>().CurrentValue;
-            var draww = config.ComboMenu["draww"].Cast<CheckBox>().CurrentValue;
-            var drawe = config.ComboMenu["drawe"].Cast<CheckBox>().CurrentValue;
+            var drawq = ComboMenu["drawq"].Cast<CheckBox>().CurrentValue;
+            var draww = ComboMenu["draww"].Cast<CheckBox>().CurrentValue;
+            var drawe = ComboMenu["drawe"].Cast<CheckBox>().CurrentValue;
 
             if (drawq)
-                new Circle() {Color = Color.Red, Radius = Lucian.Q.Radius, BorderWidth = 2f};
+                new Circle() {Color = Color.Red, Radius = Q.Range, BorderWidth = 2f};
 
             if (draww)
             {
-                new Circle() { Color = Color.DodgerBlue, Radius = Lucian.W.Radius, BorderWidth = 2f };
+                new Circle() { Color = Color.DodgerBlue, Radius = W.Range, BorderWidth = 2f };
             }
             if (drawe)
             {
-                new Circle() { Color = Color.LimeGreen, Radius = Lucian.E.Range, BorderWidth = 2f };
+                new Circle() { Color = Color.LimeGreen, Radius = E.Range, BorderWidth = 2f };
             }
         }
     }
