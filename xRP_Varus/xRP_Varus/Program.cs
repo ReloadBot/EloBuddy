@@ -52,8 +52,8 @@ namespace xRP_Varus
 
 
             HarassMenu = VarusMenu.AddSubMenu("HarassMenu", "Harass");
-            ComboMenu.AddGroupLabel("Harass Settings");
-            ComboMenu.AddSeparator();
+            HarassMenu.AddGroupLabel("Harass Settings");
+            HarassMenu.AddSeparator();
             HarassMenu.Add("useQHarass", new CheckBox("Use Q"));
             HarassMenu.Add("useEHarass", new CheckBox("Use E"));
             HarassMenu.Add("waitAA", new CheckBox("wait for AA to finish", false));
@@ -76,7 +76,7 @@ namespace xRP_Varus
 
             LaneClearMenu = VarusMenu.AddSubMenu("Lane Clear", "laneclear");
             LaneClearMenu.AddGroupLabel("Lane Clear Settings");
-            DrawMenu.AddSeparator();
+            LaneClearMenu.AddSeparator();
             LaneClearMenu.Add("LCQ", new CheckBox("Use Q"));
             LaneClearMenu.Add("countM", new Slider("Min minions to Q", 3, 0, 6));
             LaneClearMenu.Add("LCE", new CheckBox("Use E"));
@@ -146,12 +146,12 @@ namespace xRP_Varus
             {
                 LaneClear();
             }
-            /*
+            
             if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Harass))
             {
                 Harass();
             }
-            */
+            
         }
 
 
@@ -207,7 +207,7 @@ namespace xRP_Varus
                         return;
                     }
 
-                    if (predQ.HitChance >= HitChance.Medium)
+                    if (predQ.HitChance >= HitChance.Medium && target.IsInRange(target, 1500))
                     {
                         Q.Cast(predQ.CastPosition);
                     }
@@ -277,8 +277,48 @@ namespace xRP_Varus
                 }
             }
 
+        }
 
+        private static void Harass()
+        {
+            var useQ = HarassMenu["useQHarass"].Cast<CheckBox>().CurrentValue;
+            var useE = HarassMenu["useEHarass"].Cast<CheckBox>().CurrentValue;
+            var waitAA = HarassMenu["waitAA"].Cast<CheckBox>().CurrentValue;
+            if (Orbwalker.IsAutoAttacking && waitAA) return;
 
+            if (Q.IsReady() && useQ)
+            {
+                var target = TargetSelector.GetTarget(Q.MaximumRange, DamageType.Physical);
+                var predQ = Q.GetPrediction(target);
+                {
+                    if (target.IsValidTarget(Q.MaximumRange) && !Q.IsCharging)
+                    {
+                        Q.StartCharging();
+                        return;
+                    }
+
+                    if (Q.IsFullyCharged && !target.IsValidTarget(1650))
+                    {
+                        return;
+                    }
+
+                    if (predQ.HitChance >= HitChance.Medium)
+                    {
+                        Q.Cast(predQ.CastPosition);
+                    }
+                }
+            }
+
+            if (E.IsReady() && useE)
+            {
+                var target = TargetSelector.GetTarget(E.Radius, DamageType.Physical);
+                var predE = E.GetPrediction(target);
+
+                if (target.IsValidTarget(E.Range) && predE.HitChance >= HitChance.Medium)
+                {
+                    E.Cast(predE.CastPosition);
+                }
+            }
         }
     }
 }
