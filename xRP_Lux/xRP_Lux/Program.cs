@@ -303,7 +303,7 @@ namespace xRP_Lux
                     foreach (var rtarget in EntityManager.Heroes.Enemies.Where(hero => hero.IsValidTarget(R.Range)))
                     {
                         var rDamage = Me.CalculateDamageOnUnit(rtarget, DamageType.Magical,
-                            new float[] { 0, 300, 400, 500 }[R.Level] + ((int)75 * Me.FlatMagicDamageMod));
+                            new float[] { 0, 300, 400, 500 }[R.Level] + (75 * Me.FlatMagicDamageMod));
 
                         if (rDamage > rtarget.Health)
                         {
@@ -356,12 +356,12 @@ namespace xRP_Lux
             if (useE && E.IsReady())
             {
                 var target = TargetSelector.GetTarget(E.Range, DamageType.Magical);
-                var prede = E.GetPrediction(target).CastPosition;
+                var prede = E.GetPrediction(target);
                 if (target.IsValidTarget(E.Range))
                 {
                     if (E.GetPrediction(target).HitChance >= EHitChance)
                     {
-                        E.Cast(prede);
+                        E.Cast(prede.CastPosition);
 
                     }
                 }
@@ -371,14 +371,17 @@ namespace xRP_Lux
             {
                 var target = TargetSelector.GetTarget(R.Range, DamageType.Magical);
                 var rDamage = Me.CalculateDamageOnUnit(target, DamageType.Magical,
-                    new float[] {0, 300, 400, 500}[R.Level] + ((int)75 * Me.FlatMagicDamageMod));
+                    new float[] {0, 300, 400, 500}[R.Level] + (75 * Me.FlatMagicDamageMod));
+                var predR = R.GetPrediction(target);
 
                 if (target.IsValidTarget(R.Range))
                 {
-                    if (rDamage > target.Health)
+                    if (rDamage >= target.Health)
                     {
-                        R.Cast(target);
-
+                        if (predR.HitChance >= HitChance.Medium)
+                        {
+                            R.Cast(predR.CastPosition);
+                        }
                     }
                 }
 
