@@ -12,7 +12,7 @@ using EloBuddy.SDK.Menu.Values;
 
 namespace xRP_Ashe
 {
-    class Program
+    internal class Program
     {
         public static AIHeroClient Me = ObjectManager.Player;
 
@@ -21,7 +21,7 @@ namespace xRP_Ashe
 
         public static Menu AsheMenu, ComboMenu, HarassMenu, FarmMenu, MiscMenu, DrawMenu, ItensMenu, PotionMenu;
 
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             Loading.OnLoadingComplete += OnLoad_Complete;
         }
@@ -33,7 +33,7 @@ namespace xRP_Ashe
 
             Q = new Spell.Active(SpellSlot.Q);
             W = new Spell.Skillshot(SpellSlot.W, 1200, SkillShotType.Cone);
-            E = new Spell.Skillshot(SpellSlot.E, 2000000, SkillShotType.Linear);
+            E = new Spell.Skillshot(SpellSlot.E, 2500, SkillShotType.Linear);
             R = new Spell.Skillshot(SpellSlot.R, 3000, SkillShotType.Linear, 250, 1600, 130);
 
 
@@ -51,6 +51,7 @@ namespace xRP_Ashe
             ComboMenu.Add("useW", new CheckBox("Use W in Combo"));
             ComboMenu.AddSeparator();
             ComboMenu.Add("useR", new CheckBox("Use R in combo"));
+            ComboMenu.Add("hpPercent", new CheckBox("Minimum Hp % to stun"));
 
             HarassMenu = AsheMenu.AddSubMenu("Harass Mode");
             HarassMenu.AddGroupLabel("Harass Settings");
@@ -67,6 +68,7 @@ namespace xRP_Ashe
             FarmMenu.Add("countP", new CheckBox("Wait 5 Passive Count to Cast Q in laneClear"));
             FarmMenu.AddSeparator();
             FarmMenu.Add("farmW", new CheckBox("Use W to farm"));
+            FarmMenu.Add("countM", new Slider("Min Minions to cast W"));
 
             MiscMenu = AsheMenu.AddSubMenu("Misc Settings");
             MiscMenu.AddGroupLabel("Misc Settings");
@@ -74,10 +76,37 @@ namespace xRP_Ashe
             MiscMenu.Add("autoE", new CheckBox("Cast E when lost target"));
             MiscMenu.AddSeparator();
             MiscMenu.Add("useQjungle", new CheckBox("Jungle Steal Q"));
+            MiscMenu.AddSeparator();
+            MiscMenu.Add("gapr", new CheckBox("R in gapcloser"));
+            MiscMenu.Add("intr", new CheckBox("Interrupter with R"));
 
             Game.OnTick += Tick;
-            //Gapcloser.OnGapcloser += Gapcloser_OnGapCloser;
+            Gapcloser.OnGapcloser += Gapcloser_OnGapCloser;
+            Interrupter.OnInterruptableSpell += Interrupter_OnInterruptableSpell;
 
+        }
+
+        //Interrupt
+        private static void Interrupter_OnInterruptableSpell(Obj_AI_Base sender,
+            Interrupter.InterruptableSpellEventArgs args)
+        {
+            var intTarget = TargetSelector.GetTarget(R.Range, DamageType.Magical);
+            {
+                if (R.IsReady() && sender.IsValidTarget(R.Range) && MiscMenu["intr"].Cast<CheckBox>().CurrentValue)
+                    R.Cast(intTarget.ServerPosition);
+            }
+        }
+
+        //gapcloser
+        private static void Gapcloser_OnGapCloser
+            (AIHeroClient sender, Gapcloser.GapcloserEventArgs gapcloser)
+        {
+            if (!MiscMenu["gapr"].Cast<CheckBox>().CurrentValue) return;
+            if (ObjectManager.Player.Distance(gapcloser.Sender, true) <
+                R.Range*R.Range && sender.IsValidTarget())
+            {
+                R.Cast(gapcloser.Sender);
+            }
         }
 
         private static void Tick(EventArgs args)
@@ -86,18 +115,101 @@ namespace xRP_Ashe
                 if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo))
                     Combo();
             }
+
+            {
+                if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.LaneClear) ||
+                    Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.JungleClear))
+                    LaneClear();
+            }
         }
+
 
         private static void Combo()
         {
             var useQ = ComboMenu["useQ"].Cast<CheckBox>().CurrentValue;
+            var useW = ComboMenu["useW"].Cast<CheckBox>().CurrentValue;
+            var useR = ComboMenu["useR"].Cast<CheckBox>().CurrentValue;
+            var waitP = ComboMenu["countP"].Cast<CheckBox>().CurrentValue;
+            var minHP = ComboMenu["hpPercent"].Cast<Slider>().CurrentValue;
 
-            if ()
+            if (Q.IsReady() && useQ)
             {
-                var target = TargetSelector.GetTarget(Me.GetAutoAttackRange(), DamageType.Physical);
-               
+                var targetq = TargetSelector.GetTarget(Me.GetAutoAttackRange() - 50, DamageType.Physical);
+
+                if (targetq != null)
+                {
+                    foreach (var buff in Player.Instance.Buffs)
+                    {
+                        if (waitP && buff.Name == "asheqcastready" && buff.Count == 5)
+                        {
+                            Q.Cast();
+                        }
+                    }
+                }
             }
+
+            if (W.IsReady() && useW)
+            {
+                var targetw = TargetSelector.GetTarget(W.Range, DamageType.Physical);
+                var predW = W.GetPrediction(targetw);
+
+                if (targetw != null)
+                {
+                    if (predW.HitChance >= HitChance.Medium)
+                    {
+                        W.Cast(predW.CastPosition);
+                    }
+                }
+            }
+
+            if (R.IsReady() && useR)
+            {
+                var targetr = TargetSelector.GetTarget(R.Range, DamageType.Magical);
+                var predR = R.GetPrediction(targetr);
+                {
+                    if (targetr != null)
+                    {
+                        if (targetr.HealthPercent <= minHP)
+                        {
+                            if (predR.HitChance >= HitChance.Medium)
+                            {
+                                R.Cast(predR.CastPosition);
+                            }
+                        }
+                    }
+                }
+            }
+
         }
 
+        private static void LaneClear()
+        {
+            var farmQ = FarmMenu["farmQ"].Cast<CheckBox>().CurrentValue;
+            var waitP = FarmMenu["countP"].Cast<CheckBox>().CurrentValue;
+            var farmW = FarmMenu["farmW"].Cast<CheckBox>().CurrentValue;
+            var countM = FarmMenu["countM"].Cast<Slider>().CurrentValue;
+
+            if (Q.IsReady() && farmQ)
+            {
+                foreach (var buff in Player.Instance.Buffs)
+                {
+                    if (waitP && buff.Name == "asheqcastready" && buff.Count == 5)
+                    {
+                        Q.Cast();
+                    }
+                }
+            }
+
+            if (W.IsReady() && farmW)
+            {
+                var minionW = EntityManager.MinionsAndMonsters.EnemyMinions.OrderBy(a => a.Health).FirstOrDefault(
+                        a => a.Distance(Player.Instance) <= W.Range && !a.IsDead && !a.IsInvulnerable);
+
+                if (minionW.CountEnemiesInRange(W.Width) >= countM)
+                {
+                    W.Cast(minionW);
+                }
+            }
+        }
     }
 }
