@@ -161,11 +161,11 @@ namespace xRP_Ashe
             {
                 var targetEr = TargetSelector.GetTarget(botrk.Range, DamageType.Mixed);
 
-                if (targetEr.IsValidTarget(500) && hpPorcent <= targetEr.HealthPercent)
+                if (targetEr.IsValidTarget(500) && hpPorcent >= targetEr.HealthPercent)
                 {
                     botrk.Cast();
                 }
-                if (mehpPorcent <= Me.HealthPercent)
+                if (Me.HealthPercent <= mehpPorcent)
                 {
                     botrk.Cast();
                 }
