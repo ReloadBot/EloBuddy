@@ -155,7 +155,7 @@ namespace xRP_Lux
         {
             if (!MiscMenu["gapq"].Cast<CheckBox>().CurrentValue) return;
             if (ObjectManager.Player.Distance(gapcloser.Sender, true) <
-                Q.Range*Q.Range && sender.IsValidTarget())
+                Q.Range*Q.Range && sender.IsValidTarget() && sender.IsEnemy)
             {
                 Q.Cast(gapcloser.Sender);
             }
