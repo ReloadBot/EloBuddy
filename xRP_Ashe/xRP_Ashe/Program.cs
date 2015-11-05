@@ -119,7 +119,7 @@ namespace xRP_Ashe
         {
             if (!MiscMenu["gapr"].Cast<CheckBox>().CurrentValue) return;
             if (ObjectManager.Player.Distance(gapcloser.Sender, true) <
-                W.Range*W.Range && sender.IsValidTarget())
+                W.Range*W.Range && sender.IsValidTarget() && sender.IsEnemy)
             {
                 W.Cast(gapcloser.Sender);
             }
