@@ -51,6 +51,15 @@ namespace xRP_Ashe
             ComboMenu.Add("useR", new CheckBox("Use R in combo"));
             ComboMenu.Add("hpPercent", new CheckBox("Minimum Hp % to stun"));
 
+            PotionMenu = AsheMenu.AddSubMenu("Potions Manager");
+            PotionMenu.AddGroupLabel("Potions Settings");
+            PotionMenu.AddSeparator();
+            PotionMenu.Add("useHP", new CheckBox("Use Health Potion"));
+            PotionMenu.Add("hpbar", new Slider("Minimum Health Percent"));
+            PotionMenu.AddSeparator();
+            PotionMenu.Add("useMP", new CheckBox("Use mana potion"));
+            PotionMenu.Add("mpbar", new Slider("Minimum Mana percent"));
+
             ItensMenu = AsheMenu.AddSubMenu("Itens Settings");
             ItensMenu.AddGroupLabel("itens settings");
             ItensMenu.AddSeparator();
@@ -128,6 +137,7 @@ namespace xRP_Ashe
         private static void Tick(EventArgs args)
         {
             Itens();
+            Potions();
 
             {
                 if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo))
@@ -144,6 +154,31 @@ namespace xRP_Ashe
                 if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Harass))
                     Harass();
             }
+        }
+
+        private static void Potions()
+        {
+            var usehp = PotionMenu["useHP"].Cast<CheckBox>().CurrentValue;
+            var hpbar = PotionMenu["hpbar"].Cast<Slider>().CurrentValue;
+            var usemp = PotionMenu["useMP"].Cast<CheckBox>().CurrentValue;
+            var mpbar = PotionMenu["mpbar"].Cast<Slider>().CurrentValue;
+
+            //potions instance
+            var hppot = new Item(ItemId.Health_Potion);
+            var mppot = new Item(ItemId.Mana_Potion);
+
+            if (usehp && hppot.IsReady() && Me.HealthPercent <= hpbar)
+            {
+                hppot.Cast();
+
+            }
+
+            if (usemp && mppot.IsReady() && Me.ManaPercent <= mpbar)
+            {
+                mppot.Cast();
+            }
+
+
         }
 
         private static void Itens()
