@@ -55,10 +55,10 @@ namespace xRP_Ashe
             PotionMenu.AddGroupLabel("Potions Settings");
             PotionMenu.AddSeparator();
             PotionMenu.Add("useHP", new CheckBox("Use Health Potion"));
-            PotionMenu.Add("hpbar", new Slider("Minimum Health Percent"));
+            PotionMenu.Add("hpbar", new Slider("Minimum Health Percent", 75));
             PotionMenu.AddSeparator();
             PotionMenu.Add("useMP", new CheckBox("Use mana potion"));
-            PotionMenu.Add("mpbar", new Slider("Minimum Mana percent"));
+            PotionMenu.Add("mpbar", new Slider("Minimum Mana percent", 50));
 
             ItensMenu = AsheMenu.AddSubMenu("Itens Settings");
             ItensMenu.AddGroupLabel("itens settings");
@@ -85,7 +85,7 @@ namespace xRP_Ashe
             FarmMenu.Add("countP", new CheckBox("Wait 5 Passive Count to Cast Q in laneClear"));
             FarmMenu.AddSeparator();
             FarmMenu.Add("farmW", new CheckBox("Use W to farm"));
-            FarmMenu.Add("countM", new Slider("Min Minions to cast W"));
+            FarmMenu.Add("countM", new Slider("Min Minions to cast W", 5));
 
             MiscMenu = AsheMenu.AddSubMenu("Misc Settings");
             MiscMenu.AddGroupLabel("Misc Settings");
@@ -94,7 +94,7 @@ namespace xRP_Ashe
             MiscMenu.AddSeparator();
             MiscMenu.Add("useQjungle", new CheckBox("Jungle Steal Q"));
             MiscMenu.AddSeparator();
-            MiscMenu.Add("gapr", new CheckBox("R in gapcloser"));
+            MiscMenu.Add("gapr", new CheckBox("W in gapcloser"));
             MiscMenu.Add("intr", new CheckBox("Interrupter with R"));
 
             DrawMenu = AsheMenu.AddSubMenu("Drawings");
@@ -298,7 +298,7 @@ namespace xRP_Ashe
                 var minionW = EntityManager.MinionsAndMonsters.EnemyMinions.OrderBy(a => a.Health).FirstOrDefault(
                         a => a.Distance(Player.Instance) <= W.Range && !a.IsDead && !a.IsInvulnerable);
 
-                if (minionW.CountEnemiesInRange(W.Width) >= countM)
+                if (minionW.CountEnemiesInRange(W.Range) >= countM)
                 {
                     W.Cast(minionW);
                 }
