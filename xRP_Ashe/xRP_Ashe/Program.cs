@@ -136,12 +136,13 @@ namespace xRP_Ashe
 
         private static void Tick(EventArgs args)
         {
-            Itens();
+           
             Potions();
 
             {
                 if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo))
                     Combo();
+                    Itens();
             }
 
             {
