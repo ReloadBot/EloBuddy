@@ -49,7 +49,7 @@ namespace xRP_Ashe
             ComboMenu.Add("useW", new CheckBox("Use W in Combo"));
             ComboMenu.AddSeparator();
             ComboMenu.Add("useR", new CheckBox("Use R in combo"));
-            ComboMenu.Add("hpPercent", new CheckBox("Minimum Hp % to stun"));
+            ComboMenu.Add("hpPercent", new Slider("Minimum Hp % to stun", 15));
 
             PotionMenu = AsheMenu.AddSubMenu("Potions Manager");
             PotionMenu.AddGroupLabel("Potions Settings");
@@ -230,7 +230,7 @@ namespace xRP_Ashe
 
             if (Q.IsReady() && useQ)
             {
-                var targetq = TargetSelector.GetTarget(Me.GetAutoAttackRange() - 50, DamageType.Physical);
+                var targetq = TargetSelector.GetTarget(Me.GetAutoAttackRange(), DamageType.Physical);
 
                 if (targetq.IsValidTarget(Me.GetAutoAttackRange()))
                 {
