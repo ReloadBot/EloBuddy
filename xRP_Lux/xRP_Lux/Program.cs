@@ -270,8 +270,7 @@ namespace xRP_Lux
                 {
                     foreach (var rtarget in EntityManager.Heroes.Enemies.Where(hero => hero.IsValidTarget(R.Range)))
                     {
-                        var rDamage = Me.CalculateDamageOnUnit(rtarget, DamageType.Magical,
-                            new float[] { 0, 300, 400, 500 }[R.Level] + (75 * Me.FlatMagicDamageMod));
+                        var rDamage = Me.GetSpellDamage(rtarget, SpellSlot.R);
 
                         if (rDamage > rtarget.Health)
                         {
@@ -338,8 +337,7 @@ namespace xRP_Lux
             if (useR && R.IsReady())
             {
                 var target = TargetSelector.GetTarget(R.Range, DamageType.Magical);
-                var rDamage = Me.CalculateDamageOnUnit(target, DamageType.Magical,
-                    new float[] {0, 300, 400, 500}[R.Level] + (75 * Me.FlatMagicDamageMod));
+                var rDamage = Me.GetSpellDamage(target, SpellSlot.R);
                 var predR = R.GetPrediction(target);
 
                 if (target.IsValidTarget(R.Range))
