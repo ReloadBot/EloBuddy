@@ -42,7 +42,7 @@ namespace xRP_Lux
 
             Q = new Spell.Skillshot(SpellSlot.Q, 1175, SkillShotType.Linear);
             W = new Spell.Skillshot(SpellSlot.W, 1075, SkillShotType.Linear);
-            E = new Spell.Skillshot(SpellSlot.E, 1200, SkillShotType.Circular);
+            E = new Spell.Skillshot(SpellSlot.E, 1200, SkillShotType.Circular, 250, null, 350);
             R = new Spell.Skillshot(SpellSlot.R, 3300, SkillShotType.Linear);
 
             // Ignite Spell
@@ -140,9 +140,8 @@ namespace xRP_Lux
                 
                 if (ally != null && ally.CountEnemiesInRange(650) >= 1)
                 {
-                    var predq = Q.GetPrediction(ally).CastPosition;
 
-                    W.Cast(predq);
+                   W.Cast(ally);
                 }
             }
         }
@@ -367,7 +366,7 @@ namespace xRP_Lux
                 var minions = EntityManager.MinionsAndMonsters.EnemyMinions.OrderBy(a => a.Health).FirstOrDefault(
                         a => a.Distance(Player.Instance) < E.Range && !a.IsDead && !a.IsInvulnerable);
 
-                if (minions.CountEnemiesInRange(E.Radius) >= minM)
+                if (minions.CountEnemiesInRange(E.Range) >= minM)
                 {
                     E.Cast(minions.Position);
                 }
