@@ -364,9 +364,9 @@ namespace xRP_Lux
 
             {
                 var minions = EntityManager.MinionsAndMonsters.EnemyMinions.OrderBy(a => a.Health).FirstOrDefault(
-                        a => a.Distance(Player.Instance) < E.Range && !a.IsDead && !a.IsInvulnerable);
+                        a => a.Distance(Player.Instance) < 1100 && !a.IsDead && !a.IsInvulnerable);
 
-                if (minions.CountEnemiesInRange(E.Range) >= minM)
+                if (minions.CountEnemiesInRange(1100) >= minM)
                 {
                     E.Cast(minions.Position);
                 }
