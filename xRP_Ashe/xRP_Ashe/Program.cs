@@ -138,11 +138,13 @@ namespace xRP_Ashe
         {
            
             Potions();
+            Itens();
+            
 
             {
                 if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo))
                     Combo();
-                    Itens();
+                    
             }
 
             {
@@ -210,9 +212,9 @@ namespace xRP_Ashe
 
             if (yommus.IsReady() && useYommus)
             {
-                var targetY = TargetSelector.GetTarget(Me.GetAutoAttackRange()-50, DamageType.Physical);
+                var targetY = TargetSelector.GetTarget(600, DamageType.Physical);
 
-                if (targetY.IsValidTarget(Me.GetAutoAttackRange()))
+                if (targetY.IsValidTarget(600))
                 {
                     yommus.Cast();
                 }
@@ -221,8 +223,11 @@ namespace xRP_Ashe
 
         }
 
+        
         private static void Combo()
         {
+
+
             var useQ = ComboMenu["useQ"].Cast<CheckBox>().CurrentValue;
             var useW = ComboMenu["useW"].Cast<CheckBox>().CurrentValue;
             var useR = ComboMenu["useR"].Cast<CheckBox>().CurrentValue;
@@ -231,11 +236,11 @@ namespace xRP_Ashe
 
             if (Q.IsReady() && useQ)
             {
-                var targetq = TargetSelector.GetTarget(Me.GetAutoAttackRange(), DamageType.Physical);
+                var targetq = TargetSelector.GetTarget(600, DamageType.Physical);
 
-                if (targetq.IsValidTarget(Me.GetAutoAttackRange()))
+                if (targetq.IsValidTarget(600))
                 {
-                    if (waitP && Me.GetBuff("asheqcastready").Count == 5)
+                    if (Me.GetBuffCount("asheqcastready") >= 5 && waitP)
                         {
                             Q.Cast();
                         }
@@ -362,5 +367,6 @@ namespace xRP_Ashe
             }
 
         }
+
     }
 }
