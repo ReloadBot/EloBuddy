@@ -104,6 +104,7 @@ namespace xRP_Lux
             LaneClearMenu = LuxMenu.AddSubMenu("Lane Clear", "laneclear");
             LaneClearMenu.AddGroupLabel("Lane Clear Settings");
             LaneClearMenu.Add("LCE", new CheckBox("Use E"));
+            LaneClearMenu.Add("minM", new Slider("Min Minions to E", 5));
 
 
             Interrupter.OnInterruptableSpell += Interrupter_OnInterruptableSpell;
@@ -195,7 +196,7 @@ namespace xRP_Lux
             if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.LaneClear) ||
                 Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.JungleClear))
             {
-                LaneClearA.LaneClear();
+                LaneClear();
             }
 
             if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Harass))
@@ -353,6 +354,25 @@ namespace xRP_Lux
 
             }
 
+        }
+
+        private static void LaneClear()
+        {
+            var useE = LaneClearMenu["LCE"].Cast<CheckBox>().CurrentValue;
+            var minM = LaneClearMenu["minM"].Cast<Slider>().CurrentValue;
+
+            if (E.IsReady() && useE)
+
+            {
+                var minions = EntityManager.MinionsAndMonsters.EnemyMinions.OrderBy(a => a.Health).FirstOrDefault(
+                        a => a.Distance(Player.Instance) < E.Range && !a.IsDead && !a.IsInvulnerable);
+
+                if (minions.CountEnemiesInRange(E.Radius) >= minM)
+                {
+                    E.Cast(minions.Position);
+                }
+
+            }
         }
 
         public static void Harass()
