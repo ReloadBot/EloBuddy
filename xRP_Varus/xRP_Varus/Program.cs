@@ -216,7 +216,7 @@ namespace xRP_Varus
 
             if (E.IsReady() && useE)
             {
-                var target = TargetSelector.GetTarget(E.Radius, DamageType.Physical);
+                var target = TargetSelector.GetTarget(E.Range, DamageType.Physical);
                 var predE = E.GetPrediction(target);
 
                 if (target.IsValidTarget(E.Range) && predE.HitChance >= HitChance.Medium)
@@ -251,7 +251,7 @@ namespace xRP_Varus
 
                 var countMinion = LaneClearMenu["countM"].Cast<Slider>().CurrentValue;
 
-                if (!Q.IsCharging && minions.CountEnemiesInRange(Q.MaximumRange - 50f) <= countMinion)
+                if (!Q.IsCharging && minions.CountEnemiesInRange(Q.MaximumRange) >= countMinion)
                 {
                     Q.StartCharging();
                     return;
@@ -271,7 +271,7 @@ namespace xRP_Varus
 
                 var countMinion = LaneClearMenu["countME"].Cast<Slider>().CurrentValue;
 
-                if (minions.CountEnemiesInRange(E.Width) >= countMinion)
+                if (minions.CountEnemiesInRange(E.Range) >= countMinion)
                 {
                     E.Cast(minions);
                 }
@@ -311,7 +311,7 @@ namespace xRP_Varus
 
             if (E.IsReady() && useE)
             {
-                var target = TargetSelector.GetTarget(E.Radius, DamageType.Physical);
+                var target = TargetSelector.GetTarget(E.Range, DamageType.Physical);
                 var predE = E.GetPrediction(target);
 
                 if (target.IsValidTarget(E.Range) && predE.HitChance >= HitChance.Medium)
