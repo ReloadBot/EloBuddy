@@ -32,7 +32,7 @@ namespace xRP_Nasus
             if (Player.Instance.ChampionName != "Nasus") return;
             Bootstrap.Init(null);
 
-            Q = new Spell.Active(SpellSlot.Q);
+            Q = new Spell.Active(SpellSlot.Q, 150);
             W = new Spell.Targeted(SpellSlot.W, 600);
             E = new Spell.Skillshot(SpellSlot.E, 650, SkillShotType.Circular);
             R = new Spell.Active(SpellSlot.R);
@@ -140,7 +140,7 @@ namespace xRP_Nasus
 
                 var targetQ = TargetSelector.GetTarget(Me.GetAutoAttackRange(), DamageType.Physical);
 
-                if (targetQ.IsValidTarget(123) && Q.IsInRange(targetQ))
+                if (targetQ.IsValidTarget(Q.Range) && Q.IsInRange(targetQ))
                 {
                     Q.Cast();
                 }
@@ -183,9 +183,9 @@ namespace xRP_Nasus
             if (Q.IsReady() && useQ)
             {
                 var minion = EntityManager.MinionsAndMonsters.EnemyMinions.OrderBy(a => a.Health).FirstOrDefault(
-                        a => a.Distance(Player.Instance) <= 123 && !a.IsDead && !a.IsInvulnerable);
+                        a => a.Distance(Player.Instance) <= Q.Range && !a.IsDead && !a.IsInvulnerable);
 
-                if (minion != null && minion.IsValidTarget(123) && minion.Health <= Me.GetSpellDamage(minion, SpellSlot.Q))
+                if (minion != null && minion.IsValidTarget(Q.Range) && minion.Health <= Me.GetSpellDamage(minion, SpellSlot.Q))
                 {
                     Q.Cast(minion);
                 }
