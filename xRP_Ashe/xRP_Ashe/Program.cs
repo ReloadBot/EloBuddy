@@ -330,14 +330,11 @@ namespace xRP_Ashe
             if (W.IsReady() && useW)
             {
                 var targetw = TargetSelector.GetTarget(W.Range, DamageType.Physical);
-                var predW = W.GetPrediction(targetw);
+             
 
                 if (targetw.IsValidTarget(W.Range))
                 {
-                    if (predW.HitChance >= HitChance.Medium)
-                    {
-                        W.Cast(predW.CastPosition);
-                    }
+                    W.Cast(targetw.Position);
                 }
             }
         }
