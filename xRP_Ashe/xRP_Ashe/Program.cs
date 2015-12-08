@@ -358,7 +358,7 @@ namespace xRP_Ashe
 
                 if (drawAa)
                 {
-                    Drawing.DrawCircle(Me.Position, Me.GetAutoAttackRange(), Color.Red);
+                    Drawing.DrawCircle(Me.Position, 600, Color.Red);
                 }
 
             }
