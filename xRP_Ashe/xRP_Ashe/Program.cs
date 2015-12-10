@@ -333,7 +333,7 @@ namespace xRP_Ashe
             {
                 var targetq = TargetSelector.GetTarget(Me.GetAutoAttackRange(), DamageType.Physical);
 
-                if (GetQPassiveBuff >= 5 && targetq.IsValidTarget(Me.GetAutoAttackRange()-50))
+                if (countP && GetQPassiveBuff >= 5 && targetq.IsValidTarget(Me.GetAutoAttackRange()-50))
                 {
                     Q.Cast();
                 }
