@@ -252,7 +252,7 @@ namespace xRP_Ashe
 
                 if (targetq.IsValidTarget(600))
                 {
-                    if (GetQPassiveBuff >= 5 && waitP)
+                    if (GetQPassiveBuff >= 4 && waitP)
                         {
                             Q.Cast();
                         }
@@ -304,7 +304,7 @@ namespace xRP_Ashe
             if (Q.IsReady() && farmQ)
             {
 
-                if (waitP && GetQPassiveBuff >= 5)
+                if (waitP && GetQPassiveBuff >= 4)
                 {
                         Q.Cast();
                     
@@ -333,7 +333,7 @@ namespace xRP_Ashe
             {
                 var targetq = TargetSelector.GetTarget(Me.GetAutoAttackRange(), DamageType.Physical);
 
-                if (countP && GetQPassiveBuff >= 5 && targetq.IsValidTarget(Me.GetAutoAttackRange()-50))
+                if (countP && GetQPassiveBuff >= 4 && targetq.IsValidTarget(Me.GetAutoAttackRange()-50))
                 {
                     Q.Cast();
                 }
