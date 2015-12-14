@@ -56,7 +56,7 @@ namespace xRP_Ashe
             ComboMenu.AddGroupLabel("Combo Settings");
             ComboMenu.AddSeparator();
             ComboMenu.Add("useQ", new CheckBox("Use Q in Combo"));
-            ComboMenu.Add("countP", new CheckBox("Wait 5 Passive Count to Cast Q"));
+            ComboMenu.Add("countP", new CheckBox("Wait Passive Count to Cast Q"));
             ComboMenu.AddSeparator();
             ComboMenu.Add("useW", new CheckBox("Use W in Combo"));
             ComboMenu.AddSeparator();
@@ -69,8 +69,6 @@ namespace xRP_Ashe
             PotionMenu.Add("useHP", new CheckBox("Use Health Potion"));
             PotionMenu.Add("hpbar", new Slider("Minimum Health Percent", 75));
             PotionMenu.AddSeparator();
-            PotionMenu.Add("useMP", new CheckBox("Use mana potion"));
-            PotionMenu.Add("mpbar", new Slider("Minimum Mana percent", 50));
 
             ItensMenu = AsheMenu.AddSubMenu("Itens Settings");
             ItensMenu.AddGroupLabel("itens settings");
@@ -86,7 +84,7 @@ namespace xRP_Ashe
             HarassMenu.AddGroupLabel("Harass Settings");
             HarassMenu.AddSeparator();
             HarassMenu.Add("useQ", new CheckBox("Use Q in harass"));
-            HarassMenu.Add("countP", new CheckBox("Wait 5 passive count to cast Q in harass"));
+            HarassMenu.Add("countP", new CheckBox("Wait passive count to cast Q in harass"));
             HarassMenu.AddSeparator();
             HarassMenu.Add("useW", new CheckBox("Use W in harass"));
 
@@ -94,7 +92,7 @@ namespace xRP_Ashe
             FarmMenu.AddGroupLabel("Farm Settings");
             FarmMenu.AddSeparator();
             FarmMenu.Add("farmQ", new CheckBox("Use Q to farm"));
-            FarmMenu.Add("countP", new CheckBox("Wait 5 Passive Count to Cast Q in laneClear"));
+            FarmMenu.Add("countP", new CheckBox("Wait Passive Count to Cast Q in laneClear"));
             FarmMenu.AddSeparator();
             FarmMenu.Add("farmW", new CheckBox("Use W to farm"));
             FarmMenu.Add("countM", new Slider("Min Minions to cast W", 5));
@@ -175,23 +173,15 @@ namespace xRP_Ashe
         {
             var usehp = PotionMenu["useHP"].Cast<CheckBox>().CurrentValue;
             var hpbar = PotionMenu["hpbar"].Cast<Slider>().CurrentValue;
-            var usemp = PotionMenu["useMP"].Cast<CheckBox>().CurrentValue;
-            var mpbar = PotionMenu["mpbar"].Cast<Slider>().CurrentValue;
 
             //potions instance
             var hppot = new Item(ItemId.Health_Potion);
-            var mppot = new Item(ItemId.Mana_Potion);
 
             if (usehp && hppot.IsReady() && Me.HealthPercent <= hpbar)
             {
                 hppot.Cast();
 
-            }
-
-            if (usemp && mppot.IsReady() && Me.ManaPercent <= mpbar)
-            {
-                mppot.Cast();
-            }
+            }          
 
 
         }
