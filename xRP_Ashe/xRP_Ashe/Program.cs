@@ -19,6 +19,18 @@ namespace xRP_Ashe
 
         public static Menu AsheMenu, ComboMenu, HarassMenu, FarmMenu, MiscMenu, DrawMenu, ItensMenu, PotionMenu;
 
+        private static int GetQPassiveBuff
+        {
+            get
+            {
+                var data = Player.Instance.Buffs
+                    .FirstOrDefault(b => b.DisplayName == "asheqcastready");
+
+                return data != null ? data.Count : 0;
+            }
+        }
+
+
         private static void Main(string[] args)
         {
             Loading.OnLoadingComplete += OnLoad_Complete;
@@ -240,7 +252,7 @@ namespace xRP_Ashe
 
                 if (targetq.IsValidTarget(600))
                 {
-                    if (Me.GetBuffCount("asheqcastready") >= 5 && waitP)
+                    if (GetQPassiveBuff >= 4 && waitP)
                         {
                             Q.Cast();
                         }
@@ -292,7 +304,7 @@ namespace xRP_Ashe
             if (Q.IsReady() && farmQ)
             {
 
-                if (waitP && Me.GetBuffCount("asheqcastready") >= 5)
+                if (waitP && GetQPassiveBuff >= 4)
                 {
                         Q.Cast();
                     
@@ -321,7 +333,7 @@ namespace xRP_Ashe
             {
                 var targetq = TargetSelector.GetTarget(Me.GetAutoAttackRange(), DamageType.Physical);
 
-                if (countP && Me.GetBuffCount("asheqcastready") >= 5 && targetq.IsValidTarget(Me.GetAutoAttackRange()-50))
+                if (countP && GetQPassiveBuff >= 4 && targetq.IsValidTarget(Me.GetAutoAttackRange()-50))
                 {
                     Q.Cast();
                 }
